@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Agora</string>
+    <string name="title_section1">All Notes</string>
+    <string name="title_section2">Project List</string>
+    <string name="title_section3">Collaborators</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Add</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_project_list">ProjectList</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="CreateProject">Create New Project</string>
+    <string name="title_activity_create_repo">CreateRepo</string>
+    <string name="btn_createproject">Create</string>
+    <string name="add">add</string>
+
+</resources>
