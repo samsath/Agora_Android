@@ -97,36 +97,36 @@ public class ProjectList extends ListActivity {
          * Gets the list of repos on the system the user has.
          */
         // TODO change this so it works better
-        Log.d("Agora","queryProject called");
+        Log.d("Agora", "queryProject called");
 
         ArrayList<ProjectsData> project = new ArrayList<ProjectsData>();
         if (isExternalStorageReadable()) {
-            File[] files = new File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()).listFiles();
-            if(files.length < 1){
-                projectList.add(new ProjectsData("There is currently no project here.","null"));
-            }else {
+
+            File[] files = new File[0];
+            try {
+                String dir = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() +"/";
+                Log.d("Agora","dir="+dir);
+                files = new File(dir).listFiles();
+            }catch(NullPointerException e) {
+                Log.d("Agora",e.toString());
+            }
+            if (files != null) {
                 for (File item : files) {
                     if (item.isDirectory()) {
                         ProjectsData rfolder = new ProjectsData(item.getName(), item.getAbsolutePath());
                         projectList.add(rfolder);
                     }
                 }
+
+            } else {
+                projectList.add(new ProjectsData("There is currently no project here.", "null"));
             }
 
         }
         initProjectInflate();
-        /*
-        ArrayList<ProjectsData> list = repolist.get_completeList(this);
-        if(list != null){
-            for( ProjectsData item : list){
-                projectList.add(item);
-            }
-            initProjectInflate();
-        }else{
-            projectList.add(new ProjectsData("No Project!","NULL"));
-        }
-        */
+
     }
+
 
     private void initProjectInflate(){
         projectAdaptor = new ProjectListFunction(this,R.layout.activity_projectlist,projectList);
@@ -155,12 +155,21 @@ public class ProjectList extends ListActivity {
         queryProjects();
     }
 
+    @Override
+    protected void onRestart(){
+        Log.d("Agora","ProjectList Restart");
+        super.onRestart();
+        projectList.clear();
+        queryProjects();
+    }
+
 
     @Override
-    protected  void onStop(){
+    protected void onStop(){
         /**
          * When the activity stops the project list is cleared
          */
+        Log.d("Agora","ProjectList Stopped");
         super.onStop();
         projectList.clear();
     }
@@ -205,10 +214,10 @@ public class ProjectList extends ListActivity {
                         toast.show();
                     }else{
                         // TODO
-                        // Send the project info to the
-                        Log.d("Agora","Project "+data.name+" Clicked");
+                        // Send the project info to the MainActivity to be displayed
+                        Log.d("Agora","Project "+data.name+" Clicked at "+data.loc);
                         Intent intent = new Intent(ProjectList.this, MainActivity.class);
-                        String[] text = new String[1];
+                        String[] text = new String[2];
                         text[0] = data.name.toString();
                         text[1] = data.loc.toString();
                         Bundle bundle = new Bundle();
@@ -219,7 +228,6 @@ public class ProjectList extends ListActivity {
 
 
                     }
-
                 }
             });
             return projectView;

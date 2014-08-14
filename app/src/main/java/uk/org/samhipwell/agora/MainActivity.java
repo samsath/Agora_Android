@@ -52,10 +52,22 @@ public class MainActivity extends Activity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         // Set up notes depending on what is sent
-        Bundle bundle = getIntent().getExtras();
-        String[] result = bundle.getStringArray("Project");
+        if(getIntent().hasExtra("Project")){
 
+            Bundle bundle = getIntent().getExtras();
+            String[] result = bundle.getStringArray("Project");
 
+            Log.d("Agora","Load project "+result[1].toString()+" notes");
+
+            project_NAME = result[0].toString().replaceAll("_"," ");
+            project_DIR = result[1].toString();
+            mTitle = project_NAME;
+            //TODO project note list collector.
+
+        }else {
+            Log.d("Agora", "Load all user notes");
+            //TODO user note list collector.
+        }
     }
 
     @Override
@@ -105,8 +117,13 @@ public class MainActivity extends Activity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
+            if(project_NAME != null){
+                getMenuInflater().inflate(R.menu.create_repo, menu);
+                restoreActionBar();
+            }else {
+                getMenuInflater().inflate(R.menu.main, menu);
+                restoreActionBar();
+            }
             return true;
         }
         return super.onCreateOptionsMenu(menu);
@@ -117,11 +134,30 @@ public class MainActivity extends Activity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                return true;
+            case R.id.createrepo:
+                addNoteClick();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
+    }
+
+    private void addNoteClick() {
+        /**
+         * This will send an intent to create a note.
+         */
+        Log.d("Agora","Project create new note ");
+        Intent intent = new Intent(MainActivity.this, NewNoteActivity.class);
+        String text = new String(project_DIR);
+        Bundle bundle = new Bundle();
+        bundle.putString("Project",text);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     /**

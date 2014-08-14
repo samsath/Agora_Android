@@ -15,5 +15,6 @@
     <string name="title_activity_create_repo">CreateRepo</string>
     <string name="btn_createproject">Create</string>
     <string name="add">add</string>
+    <string name="title_activity_new_note">NewNoteActivity</string>
 
 </resources>
