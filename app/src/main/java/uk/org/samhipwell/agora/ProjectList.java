@@ -65,7 +65,8 @@ public class ProjectList extends ListActivity {
 
         switch (item.getItemId()){
             case R.id.action_settings:
-                return true;
+                Intent intent = new Intent(ProjectList.this,SettingActivity.class);
+                startActivity(intent);
             case R.id.createrepo:
                 addProjectClick();
                 return true;

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -13,11 +14,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ProjectList"
@@ -50,6 +46,32 @@
         <activity
             android:name=".NewNoteActivity"
             android:label="@string/title_activity_new_note" >
+        </activity>
+        <activity
+            android:name=".StarScreen"
+            android:label="@string/title_activity_star_screen" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".loginScrenn"
+            android:label="@string/title_activity_login_screnn"
+            android:parentActivityName=".StarScreen" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uk.org.samhipwell.agora.StarScreen" />
+        </activity>
+        <activity
+            android:name=".SettingActivity"
+            android:label="@string/title_activity_setting" >
         </activity>
     </application>
 

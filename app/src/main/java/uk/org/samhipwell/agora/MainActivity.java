@@ -136,7 +136,8 @@ public class MainActivity extends Activity
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
             case R.id.action_settings:
-                return true;
+                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+                startActivity(intent);
             case R.id.createrepo:
                 addNoteClick();
                 return true;

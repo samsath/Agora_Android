@@ -16,5 +16,8 @@
     <string name="btn_createproject">Create</string>
     <string name="add">add</string>
     <string name="title_activity_new_note">NewNoteActivity</string>
+    <string name="title_activity_star_screen">Start Screen</string>
+    <string name="title_activity_login_screnn">Sign In</string>
+    <string name="title_activity_setting">Settings</string>
 
 </resources>
