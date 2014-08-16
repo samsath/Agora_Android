@@ -1,22 +1,41 @@
 package uk.org.samhipwell.agora;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.message.BasicNameValuePair;
-import org.eclipse.jgit.diff.Edit;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class loginScrenn extends Activity {
@@ -25,7 +44,8 @@ public class loginScrenn extends Activity {
     private static String url = "";
     private static String port = "";
 
-    HttpClient httpclient;
+
+    HttpClient httpclient = new DefaultHttpClient();
     HttpPost httppost;
 
     EditText uname,pwd;
@@ -34,14 +54,18 @@ public class loginScrenn extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginscreen);
-        settings = this.getPreferences(MODE_WORLD_WRITEABLE);
-        if(settings.contains("agoraURL")){
-            url = settings.getString("agoraURL"," ");
-        }
-        if(settings.contains("agoraPort")){
-            port = settings.getString("agoraPort"," ");
-        }
 
+        Log.e("Agora","LoginScreen Started");
+
+        settings = this.getSharedPreferences("Agora", MODE_WORLD_READABLE);
+       // if(settings.contains("agoraURL")){
+            url = settings.getString("agoraURL"," ");
+            Log.d("Agora","url =" +url);
+        //}
+       // if(settings.contains("agoraPort")){
+            port = settings.getString("agoraPort"," ");
+            Log.d("Agora","port =" +port);
+       // }
         uname = (EditText) findViewById(R.id.etUsername);
         pwd = (EditText) findViewById(R.id.etPassword);
     }
@@ -71,16 +95,118 @@ public class loginScrenn extends Activity {
     }
 
 
-    public void signinClick(View view) {
+    public void signinClick(View view) throws ExecutionException, InterruptedException {
 
-        List<NameValuePair> postValues = new ArrayList<NameValuePair>(2);
-        postValues.add(new BasicNameValuePair("username",uname.getText().toString()));
-        postValues.add(new BasicNameValuePair("password",pwd.getText().toString()));
+        List<String> data = new ArrayList<String>();
+        String username = uname.getText().toString();
+        String password = pwd.getText().toString();
 
-        // TODO http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
+
+        data.add("http://"+url+":"+port+"/app/"+username+"/");
+        data.add(username);
+        data.add(password);
+
+        Log.d("Agora",data.toString());
+
+        LoginCheck logcheck = new LoginCheck();
+        logcheck.execute(data).get();
+
+        /**
+         * if the request has a the logged in info then the information gets sent to the
+         * db else a toast saying that
+         */
+        JSONObject jsonResult = logcheck.onPostExecute();
+
+        try {
+            if(jsonResult.getString("logged").equals("Welcome")){
+                Log.d("Agora UI",jsonResult.getString("first_name"));
+
+                // TODO Add database upload here then intent to sync page
+            }else{
+                uname.setText("User name here please!");
+                pwd.setText("");
+                Context context = getApplicationContext();
+                CharSequence Toasttext = "User login details wrong!";
+                Toast toast = Toast.makeText(context,Toasttext,Toast.LENGTH_LONG);
+                toast.show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
     public void registerClick(View view) {
+        //TODO register section
+    }
+
+
+    private class LoginCheck extends AsyncTask<List<String>, Integer, JSONObject> {
+
+        protected JSONObject jsonResult = null;
+
+        @Override
+        protected JSONObject doInBackground(List<String>... request) {
+            // TODO http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
+            // TODO http://stackoverflow.com/questions/6343166/android-os-networkonmainthreadexception
+
+
+            String result;
+
+            String url = request[0].get(0);
+            String user = request[0].get(1);
+            String password = request[0].get(2);
+
+            Log.e("Agora", url);
+            httppost = new HttpPost(url);
+            Log.e("Agora", httppost.toString());
+            HttpResponse response;
+
+            List<NameValuePair> postValues = new ArrayList<NameValuePair>(2);
+            postValues.add(new BasicNameValuePair("username", user));
+            postValues.add(new BasicNameValuePair("password", password));
+
+           try {
+               Log.e("Agora", "post value -" + postValues.toString());
+               httppost.setEntity(new UrlEncodedFormEntity(postValues, "UTF-8"));
+               response = httpclient.execute(httppost);
+
+               HttpEntity entity = response.getEntity();
+
+               InputStream inputstream = entity.getContent();
+
+               BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream,"UTF-8"), 8);
+               StringBuilder buidler = new StringBuilder();
+
+               String line;
+
+               while((line =  reader.readLine()) != null){
+                   buidler.append(line + "\n");
+               }
+               result = buidler.toString();
+
+               Log.e("Agora Result",result);
+
+               jsonResult = new JSONObject(result);
+
+               Log.d("Agora",jsonResult.getString("first_name"));
+
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+               e.printStackTrace();
+           }
+
+
+            return null;
+        }
+
+        protected JSONObject onPostExecute(){
+            return jsonResult;
+        }
+
     }
 }

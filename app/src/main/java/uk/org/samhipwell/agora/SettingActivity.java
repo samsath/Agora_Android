@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -23,7 +24,7 @@ public class SettingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        settings = this.getPreferences(MODE_WORLD_WRITEABLE);
+        settings = this.getSharedPreferences("Agora",MODE_WORLD_READABLE);
 
         url = (EditText) findViewById(R.id.etURL);
         port = (EditText) findViewById(R.id.etPort);
@@ -37,9 +38,14 @@ public class SettingActivity extends Activity {
 
 
     public void settingSaveClick(View view) {
-        String agora = url.getText().toString();
+        String aurl = url.getText().toString();
+        Log.d("Agora",aurl);
         String aport = port.getText().toString();
-        editor.putString(Aurl,agora);
+        Log.d("Agora",aport);
+
+        editor = settings.edit();
+
+        editor.putString(Aurl,aurl);
         editor.putString(Aport,aport);
 
         editor.commit();
