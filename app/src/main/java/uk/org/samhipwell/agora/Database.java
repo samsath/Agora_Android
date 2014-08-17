@@ -13,39 +13,39 @@ import java.util.List;
 
 public class Database extends SQLiteOpenHelper{
 
-    private static final String LOG = "Agora";
+    public static final String LOG = "Agora";
 
     // Database info
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "AgoraManager";
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "AgoraManager";
 
     //table names
-    private static final String TABLE_REPO = "repo";
-    private static final String TABLE_USER = "user";
-    private static final String TABLE_LOGIN = "login";
-    private static final String TABLE_USER_REPO ="userrepo";
+    public static final String TABLE_REPO = "repo";
+    public static final String TABLE_USER = "user";
+    public static final String TABLE_LOGIN = "login";
+    public static final String TABLE_USER_REPO ="userrepo";
 
     //common columns
-    private static final String KEY_ID ="id";
-    private static final String KEY_USERID = "userid";
+    public static final String KEY_ID ="id";
+    public static final String KEY_USERID = "userid";
 
     //repo table
-    private static final String KEY_RNAME = "rname";
-    private static final String KEY_URL = "url";
-    private static final String KEY_HASH = "hash";
+    public static final String KEY_RNAME = "rname";
+    public static final String KEY_URL = "url";
+    public static final String KEY_HASH = "hash";
 
     //user table
-    private static final String KEY_USERNAME ="username";
-    private static final String KEY_FNAME ="first_name";
-    private static final String KEY_LNAME = "last_name";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_PHOTO = "photo";
+    public static final String KEY_USERNAME ="username";
+    public static final String KEY_FNAME ="first_name";
+    public static final String KEY_LNAME = "last_name";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_PHOTO = "photo";
 
     //login table
-    private static final String KEY_COOKIE = "cookie";
+    public static final String KEY_COOKIE = "cookie";
 
     //user_repo table
-    private static final String KEY_REPOID = "repoid";
+    public static final String KEY_REPOID = "repoid";
 
     //Table creators
     // repo table
@@ -58,7 +58,7 @@ public class Database extends SQLiteOpenHelper{
 
     // user table
     private static final String CREATE_TABLE_USER = "CREATE TABLE " +TABLE_USER +
-                                                    "(" + KEY_ID +"INTEGER PRIMARY KEY ," +
+                                                    "(" + KEY_ID +" INTEGER PRIMARY KEY ," +
                                                     KEY_USERNAME +" VARCHAR(255)," +
                                                     KEY_FNAME + " VARCHAR(255)," +
                                                     KEY_LNAME +" VARCHAR(255), " +
@@ -353,14 +353,21 @@ public class Database extends SQLiteOpenHelper{
     public long createLogin(Login log ){
         /**
          * Create login details
+         * execSQL("DELETE FROM " + TABLE_USER_REPO + " ORDER BY " + KEY_USERID + " ASC LIMIT(0,1);"):
          */
         SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor data = db.rawQuery("SELECT * FROM "+TABLE_LOGIN,null);
+        if(data.moveToFirst()){
+            db.execSQL("DELETE FROM " + TABLE_LOGIN + " ORDER BY " + KEY_USERID + " ASC LIMIT(0,1);");
+            Log.i("Agora","login detail deleted");
+        }
         ContentValues values = new ContentValues();
 
         values.put(KEY_USERID,log.getUserid());
         values.put(KEY_COOKIE,log.getCookie());
-
-        long i = db.insert(TABLE_USER_REPO,null,values);
+        Log.i("Agora","login detail created");
+        long i = db.insert(TABLE_LOGIN,null,values);
 
         return i;
     }
@@ -408,6 +415,31 @@ public class Database extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
             db.close();
+    }
+
+    public List<Login> getLogin(){
+        /**
+         * Get all the Login on the system.
+         */
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Login> Login = new ArrayList<Login>();
+        String selectQuery = "SELECT * FROM " + TABLE_LOGIN;
+
+        Log.e(LOG,selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery,null);
+
+        if(c!=null){
+            if(c.moveToFirst()){
+                do{
+                    Login log = new Login();
+                    log.setUserid(c.getInt(c.getColumnIndex(KEY_USERID)));
+                    log.setCookie(c.getString(c.getColumnIndex(KEY_COOKIE)));
+                    Login.add(log);
+                } while(c.moveToNext());
+            }
+        }
+        return Login;
     }
 
 

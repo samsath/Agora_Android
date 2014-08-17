@@ -19,5 +19,8 @@
     <string name="title_activity_star_screen">Start Screen</string>
     <string name="title_activity_login_screnn">Sign In</string>
     <string name="title_activity_setting">Settings</string>
+    <string name="title_activity_register">Register Activity</string>
+    <string name="title_activity_sync_actiity">SyncActiity</string>
+    <string name="Sync">Getting Projects from Server</string>
 
 </resources>

@@ -121,7 +121,21 @@ public class loginScrenn extends Activity {
             if(jsonResult.getString("logged").equals("Welcome")){
                 Log.d("Agora UI",jsonResult.getString("first_name"));
 
-                // TODO Add database upload here then intent to sync page
+                User user = new User();
+                user.setUsername(username);
+                user.setEmail(jsonResult.getString("email"));
+                user.setFirst_name(jsonResult.getString("first_name"));
+                user.setLast_name(jsonResult.getString("last_name"));
+
+                Database db = new Database(this);
+                long id = db.createUser(user);
+                Login login = new Login(id,jsonResult.getString("cookie"));
+                long result = db.createLogin(login);
+
+                Intent intent = new Intent(loginScrenn.this,SyncActiity.class);
+                startActivity(intent);
+
+
             }else{
                 uname.setText("User name here please!");
                 pwd.setText("");
@@ -138,7 +152,8 @@ public class loginScrenn extends Activity {
     }
 
     public void registerClick(View view) {
-        //TODO register section
+        Intent intent = new Intent(loginScrenn.this,RegisterActivity.class);
+        startActivity(intent);
     }
 
 
@@ -148,8 +163,8 @@ public class loginScrenn extends Activity {
 
         @Override
         protected JSONObject doInBackground(List<String>... request) {
-            // TODO http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
-            // TODO http://stackoverflow.com/questions/6343166/android-os-networkonmainthreadexception
+            //  http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
+            //  http://stackoverflow.com/questions/6343166/android-os-networkonmainthreadexception
 
 
             String result;

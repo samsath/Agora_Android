@@ -4,10 +4,10 @@ package uk.org.samhipwell.agora;
  * Created by sam on 15/08/14.
  */
 public class Login {
-    int userid;
+    long userid;
     String cookie;
 
-    public Login(int userid,  String cookie) {
+    public Login(long userid,  String cookie) {
         this.userid = userid;
         this.cookie = cookie;
     }
@@ -16,7 +16,7 @@ public class Login {
     }
 
 
-    public int getUserid() {
+    public long getUserid() {
         return userid;
     }
 
