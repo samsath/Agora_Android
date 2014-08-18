@@ -114,21 +114,29 @@ public class Database extends SQLiteOpenHelper{
      *
      */
 
-    public long createRepo(Repo repo, long[] user_id){
+    public long createRepo(Repo repo, long user_id){
         /**
          * This creates a Repo on the database
          */
         SQLiteDatabase db = this.getWritableDatabase();
+        long repo_id;
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_RNAME, repo.getRname());
-        values.put(KEY_URL, repo.getUrl());
-        values.put(KEY_HASH, repo.getHash());
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_REPO + " WHERE "+ KEY_RNAME +" = '" + repo.getRname()+"';",null);
+        if(c.moveToFirst()){
+            // user already exsits on database
+            repo_id = c.getInt(c.getColumnIndex(KEY_ID));
+        }else {
 
-        long repo_id = db.insert(TABLE_REPO,null,values);
+            ContentValues values = new ContentValues();
+            values.put(KEY_RNAME, repo.getRname());
+            values.put(KEY_URL, repo.getUrl());
+            values.put(KEY_HASH, repo.getHash());
 
-        for (long user : user_id){
-            createUserRepo(repo_id,user);
+            repo_id = db.insert(TABLE_REPO, null, values);
+
+
+            createUserRepo(repo_id, user_id);
+
         }
 
         return repo_id;
@@ -140,22 +148,24 @@ public class Database extends SQLiteOpenHelper{
          */
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " + TABLE_REPO + " WHERE " +KEY_RNAME+ " = " + reponame;
+        String selectQuery = "SELECT * FROM " + TABLE_REPO + " WHERE " +KEY_RNAME+ " = '" + reponame +"'";
 
         Log.e(LOG,selectQuery);
 
         Cursor c = db.rawQuery(selectQuery,null);
 
-        if(c!=null){
+        if(c.getCount()>0){
             c.moveToFirst();
+            Repo rep = new Repo();
+            rep.setId(c.getInt(c.getColumnIndex(KEY_ID)));
+            rep.setRname(c.getString(c.getColumnIndex(KEY_RNAME)));
+            rep.setUrl(c.getString(c.getColumnIndex(KEY_URL)));
+            rep.setHash(c.getString(c.getColumnIndex(KEY_HASH)));
+            return rep;
+        }else{
+            return null;
         }
-        Repo rep = new Repo();
-        rep.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-        rep.setRname(c.getString(c.getColumnIndex(KEY_RNAME)));
-        rep.setUrl(c.getString(c.getColumnIndex(KEY_URL)));
-        rep.setHash(c.getString(c.getColumnIndex(KEY_HASH)));
 
-        return rep;
     }
 
     public List<Repo> getAllRepo(){
@@ -219,15 +229,23 @@ public class Database extends SQLiteOpenHelper{
          * Create a user.
          */
         SQLiteDatabase db = this.getWritableDatabase();
+        long user_id;
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_USERNAME, user.getUsername());
-        values.put(KEY_FNAME,user.getFirst_name());
-        values.put(KEY_LNAME,user.getLast_name());
-        values.put(KEY_EMAIL,user.getEmail());
-        values.put(KEY_PHOTO,user.getPhoto());
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_USER + " WHERE "+ KEY_USERNAME +" = '" + user.getUsername()+"';",null);
+        if(c.moveToFirst()){
+            // user already exsits on database
+            user_id = c.getInt(c.getColumnIndex(KEY_ID));
+        }else {
 
-        long user_id = db.insert(TABLE_USER,null,values);
+            ContentValues values = new ContentValues();
+            values.put(KEY_USERNAME, user.getUsername());
+            values.put(KEY_FNAME, user.getFirst_name());
+            values.put(KEY_LNAME, user.getLast_name());
+            values.put(KEY_EMAIL, user.getEmail());
+            values.put(KEY_PHOTO, user.getPhoto());
+
+            user_id = db.insert(TABLE_USER, null, values);
+        }
         return user_id;
     }
 
@@ -237,7 +255,7 @@ public class Database extends SQLiteOpenHelper{
          */
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USERNAME + " = " +username;
+        String selectQuery = "SELECT * FROM " + TABLE_USER + " WHERE " + KEY_USERNAME + " = '" +username+"';";
 
         Log.e(LOG, selectQuery);
 
@@ -341,7 +359,7 @@ public class Database extends SQLiteOpenHelper{
 
 
         // updating row
-        db.delete(TABLE_USER_REPO, KEY_USERID + " = " + user_id + " AND " + KEY_RNAME + " = " +repo_id,null );
+        db.delete(TABLE_USER_REPO, KEY_USERID + " = '" + user_id + "' AND " + KEY_RNAME + " = '" +repo_id+"';",null );
 
     }
     /**
@@ -353,13 +371,14 @@ public class Database extends SQLiteOpenHelper{
     public long createLogin(Login log ){
         /**
          * Create login details
-         * execSQL("DELETE FROM " + TABLE_USER_REPO + " ORDER BY " + KEY_USERID + " ASC LIMIT(0,1);"):
+         * DELETE FROM login ORDER BY userid ASC LIMIT(1);
          */
         SQLiteDatabase db = this.getWritableDatabase();
 
         Cursor data = db.rawQuery("SELECT * FROM "+TABLE_LOGIN,null);
-        if(data.moveToFirst()){
-            db.execSQL("DELETE FROM " + TABLE_LOGIN + " ORDER BY " + KEY_USERID + " ASC LIMIT(0,1);");
+        if(data.getCount() > 0){
+            Log.d("Agora database = ", String.valueOf(data.getCount()));
+            db.execSQL("DELETE FROM " + TABLE_LOGIN + ";");
             Log.i("Agora","login detail deleted");
         }
         ContentValues values = new ContentValues();
@@ -398,7 +417,7 @@ public class Database extends SQLiteOpenHelper{
          * This checks if the is an account active on the program
          */
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT "+ KEY_USERID +" FROM " + TABLE_LOGIN;
+        String selectQuery = "SELECT '"+ KEY_USERID +"'sa FROM " + TABLE_LOGIN;
 
         Log.e(LOG,selectQuery);
 

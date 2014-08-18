@@ -42,7 +42,7 @@ public class addRepo_Service extends Service {
 
     protected class addRepoBinder extends Binder {
 
-        public Boolean create_repo(Context context, String name) throws GitAPIException, IOException {
+        public Boolean create_repo(Context context, String name) throws IOException {
             /**
              * The idea here is to create a new repository in the app data file on external storage.
              * Once created it will be populated with a .git repo
@@ -58,13 +58,13 @@ public class addRepo_Service extends Service {
                 }
 
                 // This part of the function then creates the git repo in the folder.
-                Git.init().setDirectory(file).call();
+                //
 
-                Repository repository = FileRepositoryBuilder.create(new File(file.getAbsolutePath(),".git"));
+                //Repository repository = FileRepositoryBuilder.create(new File(file.getAbsolutePath(),".git"));
 
-                Log.d("GitTest","Repository Created");
+                //Log.d("GitTest","Repository Created");
 
-                repository.close();
+                //repository.close();
             }
             return true;
         }

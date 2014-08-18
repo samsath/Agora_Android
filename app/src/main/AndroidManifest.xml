@@ -72,6 +72,9 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uk.org.samhipwell.agora.loginScrenn" />
         </activity>
         <activity
             android:name=".RegisterActivity"
