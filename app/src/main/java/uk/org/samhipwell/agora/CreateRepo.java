@@ -13,8 +13,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 import java.io.IOException;
 
 
@@ -66,7 +64,7 @@ public class CreateRepo extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void createProject_onClick(View view) throws GitAPIException, IOException {
+    public void createProject_onClick(View view) throws IOException {
         /**
          * When clicked it will start the service and create the repo of the name.
          * If it works then takes the user to the project screen, else display message.

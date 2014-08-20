@@ -4,27 +4,23 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import org.apache.http.Header;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -35,25 +31,30 @@ import java.util.Map;
 
 public class serverSync extends AsyncTask<String, Integer, JSONObject> {
 
+    private final static int GET = 5;
+    private final static int SEND = 7;
+    private final static int UPDATE = 9;
 
-    Context context;
-    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-    private JSONObject jsonResult;
+    private Context context;
+    private NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
 
-    Database db;
+    private Database db;
     JsonGet js;
-    HttpClient httpclient = new DefaultHttpClient();
+    private HttpClient httpclient = new DefaultHttpClient();
 
     public serverSync(Context contextin){ context = contextin;}
     public String SendBack;
-    protected String url;
     protected String port;
 
-    protected String aurl;
+    private String aurl;
     String cookie;
-    String projectName;
+    private String projectName;
     String hashname = null;
+
+    fileSurport fs;
+
+
 
 
     @Override
@@ -61,11 +62,11 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
         super.onPreExecute();
         SharedPreferences settings = context.getSharedPreferences("Agora", 1);
 
-        url = settings.getString("agoraURL", " ");
+        String url = settings.getString("agoraURL", " ");
         port = settings.getString("agoraPort", " ");
         aurl ="http://"+ url +":"+ port +"/app/";
 
-
+        fs = new fileSurport(context);
         js = new JsonGet();
         db = new Database(context);
 
@@ -78,7 +79,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
         List<Login> det = db.getLogin();
         cookie = det.get(0).getCookie();
         long user_id = det.get(0).getUserid();
-        Log.d("Agora cookie",cookie);
+        //Log.d("Agora cookie",cookie);
         postValues.add(new BasicNameValuePair("session_key",cookie));
 
         try {
@@ -109,7 +110,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                         Repo rep = new Repo();
                         rep.setRname(projectName);
                         rep.setHash(hashname);
-                        rep.setUrl(create_repo(context, row.getString("name")));
+                        rep.setUrl(fs.create_repo(context, row.getString("name")));
                         db.createRepo(rep, user_id);
                     }
 
@@ -128,9 +129,56 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                         JSONObject reprow = RepArray.getJSONObject(r);
                         serverList.put(reprow.getString("name"),Long.valueOf(reprow.getString("time")));
                     }
-                    String getList = compareList(serverList,projectName);
+                    //Log.e("Agora Server Reply List",serverList.toString());
+                    Map<String,Integer> getList = fs.compareList(serverList, projectName);
 
-                    // send the getList to the server and get those files.
+                    for(Map.Entry<String,Integer> item : getList.entrySet()){
+                        String note = item.getKey().substring(0, item.getKey().length() - 5).toLowerCase();
+                        switch (item.getValue()){
+                            case GET:
+                                // if the file request is just to recieve the file then a GET request is sent
+                                HttpGet htpget = new HttpGet(aurl+"repo/"+row.getString("url")+"/note/"+note+"/");
+                                ResponseHandler<String> responseHandler = new BasicResponseHandler();
+                                String serverRes;
+                                serverRes = httpclient.execute(htpget,responseHandler);
+                                //Log.d("Agora file res=",serverRes);
+                                // project name, filename, content
+                                fs.writeFile(row.getString("name"), item.getKey().toLowerCase(), serverRes);
+                                break;
+
+                            case SEND:
+                                // if the file is on the device but not on the server
+                                String sendcontent = fs.readFile(row.getString("name"), item.getKey().toLowerCase());
+                                HttpPost sendfile = new HttpPost(aurl+"repo/"+row.getString("url")+"/note/upload/"+note+"/");
+                                List<NameValuePair> sendvalues = new ArrayList<NameValuePair>(2);
+                                sendvalues.add(new BasicNameValuePair("file",sendcontent));
+                                sendvalues.add(new BasicNameValuePair("session_key",cookie));
+
+                                httppost.setEntity(new UrlEncodedFormEntity(sendvalues, "UTF-8"));
+                                httpclient.execute(sendfile);
+
+
+                                break;
+
+                            case UPDATE:
+                                // the file is on the device and server but needs to be commbined
+                                String updatecontent = fs.readFile(row.getString("name"), item.getKey().toLowerCase());
+                                HttpPost updatefile = new HttpPost(aurl+"repo/"+row.getString("url")+"/note/check/"+note+"/");
+                                List<NameValuePair> updatevalues = new ArrayList<NameValuePair>(2);
+                                updatevalues.add(new BasicNameValuePair("file",updatecontent));
+                                updatevalues.add(new BasicNameValuePair("session_key",cookie));
+
+                                httppost.setEntity(new UrlEncodedFormEntity(updatevalues, "UTF-8"));
+                                HttpResponse updateResponse = httpclient.execute(updatefile);
+
+                                fs.writeFile(row.getString("name"), note, updateResponse.toString());
+
+                                break;
+
+                        }
+                    }
+
+
                 }
             }
 
@@ -140,10 +188,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
         }
-
 
 
 
@@ -151,64 +196,8 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
 
     }
 
-    private String compareList(Map<String, Long> serverList, String projectName) {
-       String results = null;
-        if(isExternalStorageWritable()){
-            String ur = Environment.DIRECTORY_DOCUMENTS +"/"+projectName;
-            File file = new File(ur);
-            File[] listofFiles = file.listFiles();
-            for(File f : listofFiles){
-                if(serverList.containsKey(f.toString())){
-                    if(serverList.get(f.toString()) != f.lastModified()){
-                        results += f.toString()+",";
-                    }
-                    results += f.toString()+",";
-                }
-            }
-
-        }
-        Log.e("Agora List result",results);
-        return results;
-    }
-
-    public boolean isExternalStorageWritable(){
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)){
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 
-
-    public String create_repo(Context context, String name) throws GitAPIException, IOException {
-        /**
-         * The idea here is to create a new repository in the app data file on external storage.
-         * Once created it will be populated with a .git repo
-         */
-        File file = null;
-        if (isExternalStorageWritable()) {
-            // if the external storage is attached. It creates the location
-            file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), name.replaceAll(" ", "_"));
-
-            if (!file.mkdirs()) {
-                // if the directory can't be made then this error will be logged
-                Log.d("GitTest", "Directory not created");
-                return null;
-            }
-
-            // This part of the function then creates the git repo in the folder.
-            Git.init().setDirectory(file).call();
-
-            Repository repository = FileRepositoryBuilder.create(new File(file.getAbsolutePath(), ".git"));
-
-            Log.d("GitTest", "Repository Created");
-
-            repository.close();
-        }
-        return String.valueOf(file.getAbsolutePath());
-    }
 
 
 

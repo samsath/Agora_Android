@@ -23,6 +23,9 @@ public class StarScreen extends Activity {
             // if someone has logged into the program before then load program down and make an intent
             //TODO add a service here to pull info from the server
             Intent intent = new Intent(StarScreen.this, MainActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("Project","all");
+            intent.putExtras(bundle);
             startActivity(intent);
         }else{
             Intent intent = new Intent(StarScreen.this, loginScrenn.class);

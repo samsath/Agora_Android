@@ -1,13 +1,10 @@
 package uk.org.samhipwell.agora;
 
 import android.app.ListActivity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 
-public class ProjectList extends ListActivity {
+public class ProjectList extends ListActivity  {
 
     private static ArrayList<ProjectsData>projectList = new ArrayList<ProjectsData>();
     private static ArrayAdapter<ProjectsData> projectAdaptor;

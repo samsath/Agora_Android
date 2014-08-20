@@ -2,9 +2,10 @@
 <resources>
 
     <string name="app_name">Agora</string>
-    <string name="title_section1">All Notes</string>
-    <string name="title_section2">Project List</string>
-    <string name="title_section3">Collaborators</string>
+    <string name="title_section1">User</string>
+    <string name="title_section2">All Notes</string>
+    <string name="title_section3">Projects</string>
+    <string name="title_section4">Collaborators</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Add</string>
@@ -16,11 +17,18 @@
     <string name="btn_createproject">Create</string>
     <string name="add">add</string>
     <string name="title_activity_new_note">NewNoteActivity</string>
-    <string name="title_activity_star_screen">Start Screen</string>
+    <string name="title_activity_star_screen">Agora</string>
     <string name="title_activity_login_screnn">Sign In</string>
     <string name="title_activity_setting">Settings</string>
     <string name="title_activity_register">Register Activity</string>
     <string name="title_activity_sync_actiity">SyncActiity</string>
     <string name="Sync">Getting Projects from Server</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="menu">Menu</string>
+    <string name="title_activity_navigation_draw">NavigationDraw</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="btn_textColour">Text Colour</string>
+    <string name="btn_BackColour">Background Colour</string>
+    <string name="save">Save</string>
 
 </resources>

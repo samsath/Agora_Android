@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="item_array">
+    <item>User</item>
+    <item>All Notes</item>
+    <item>Project List</item>
+    <item>Collaborators</item>
+    </string-array>
+</resources>

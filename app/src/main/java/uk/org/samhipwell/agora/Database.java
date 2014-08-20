@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
@@ -417,16 +416,17 @@ public class Database extends SQLiteOpenHelper{
          * This checks if the is an account active on the program
          */
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT '"+ KEY_USERID +"'sa FROM " + TABLE_LOGIN;
+        String selectQuery = "SELECT '"+ KEY_USERID +"' FROM " + TABLE_LOGIN;
 
         Log.e(LOG,selectQuery);
 
         Cursor c = db.rawQuery(selectQuery,null);
 
-        if(c == null ){
+        if(c.getCount() > 0 ){
             return true;
+        }else {
+            return false;
         }
-        return false;
     }
 
 
@@ -459,6 +459,26 @@ public class Database extends SQLiteOpenHelper{
             }
         }
         return Login;
+    }
+
+    public String getUsername(){
+
+        String uname ="";
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT '"+ KEY_USERID +"' FROM " + TABLE_LOGIN;
+        Cursor c = db.rawQuery(selectQuery,null);
+        if(c.moveToFirst()) {
+            int userid = c.getInt(c.getColumnIndex(KEY_USERID));
+            String usernameQuery = "SELECT '" + KEY_USERNAME + "' FROM " + TABLE_USER + " WHERE " + KEY_ID + " = '" + userid + "';";
+            Cursor name = db.rawQuery(usernameQuery, null);
+            if (name.moveToFirst()) {
+                uname = name.getString(0);
+            }
+        }else{
+            uname = "Unkown";
+        }
+
+        return uname;
     }
 
 

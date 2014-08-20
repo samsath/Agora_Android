@@ -42,6 +42,7 @@ import java.util.concurrent.ExecutionException;
 
 
 public class RegisterActivity extends Activity {
+    public static final int RESULT_OK = 7;
     EditText username,password,firstname,lastname,email;
     ImageView imageview;
     private String imagePath;
@@ -92,7 +93,7 @@ public class RegisterActivity extends Activity {
     public void ImageViewClick(View view) {
         Intent imageintent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-        startActivityForResult(imageintent, MainActivity.RESULT_OK);
+        startActivityForResult(imageintent, RESULT_OK);
     }
 
     @Override
@@ -104,7 +105,7 @@ public class RegisterActivity extends Activity {
 		 */
         super.onActivityResult(reqCode, resCode, idata);
 
-        if(reqCode == MainActivity.RESULT_OK){
+        if(reqCode == RESULT_OK){
             if( resCode == RESULT_OK){
                 if(idata != null){
 

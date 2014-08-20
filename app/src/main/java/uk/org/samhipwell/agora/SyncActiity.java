@@ -1,8 +1,9 @@
 package uk.org.samhipwell.agora;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,24 +13,48 @@ import java.util.concurrent.ExecutionException;
 
 public class SyncActiity extends Activity {
 
+    private final int DURATION = 3000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("Agora", "Sync Activity Started");
-        setContentView(R.layout.activity_sync_actiity);
-        Database db = new Database(this);
-        List<Login> data = db.getLogin();
-        String cookie = data.get(0).getCookie();
-        //TODO set up the async connection to get the information
 
-        serverSync sync = new serverSync(this);
-        try {
-            sync.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        setContentView(R.layout.activity_sync_actiity);
+
+    }
+
+    @Override
+    protected void onStart(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Database db = new Database(SyncActiity.this);
+                List<Login> data = db.getLogin();
+                String cookie = data.get(0).getCookie();
+                //TODO set up the async connection to get the information
+
+                serverSync sync = new serverSync(SyncActiity.this);
+                try {
+                    sync.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, DURATION/3);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Intent intent = new Intent(SyncActiity.this, MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("Project","all");
+                intent.putExtras(bundle);
+                SyncActiity.this.startActivity(intent);
+                SyncActiity.this.finish();
+            }
+        }, DURATION);
     }
 
 
