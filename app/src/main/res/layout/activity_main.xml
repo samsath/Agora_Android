@@ -1,12 +1,21 @@
-<RelativeLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:gravity="top|fill_vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft='8dp'
+    android:paddingRight='8dp'
+    android:paddingTop='8dp'
+    android:paddingBottom='8dp'
+    tools:context=".MyActivity"
+    android:id="@+id/mainRelativeLayout">
+
 
     <GridView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
         android:id="@+id/gridView"
-        android:layout_margin="5dp" />
+        android:layout_marginTop="@dimen/activity_vertical_margin" />
 </RelativeLayout>

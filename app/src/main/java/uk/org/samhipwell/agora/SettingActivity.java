@@ -48,7 +48,7 @@ public class SettingActivity extends Activity {
         editor.putString(Aurl,aurl);
         editor.putString(Aport,aport);
 
-        editor.commit();
+        editor.apply();
 
         Intent intent = new Intent(SettingActivity.this, MainActivity.class);
         startActivity(intent);

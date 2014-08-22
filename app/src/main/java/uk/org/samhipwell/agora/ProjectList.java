@@ -64,21 +64,16 @@ public class ProjectList extends ListActivity  {
             case R.id.action_settings:
                 Intent intent = new Intent(ProjectList.this,SettingActivity.class);
                 startActivity(intent);
+                return true;
             case R.id.createrepo:
-                addProjectClick();
+                Intent cintent = new Intent(ProjectList.this,CreateRepo.class);
+                startActivity(cintent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void addProjectClick() {
-        /**
-         * Starts the create repo activity
-         */
-        Intent intent = new Intent(ProjectList.this,CreateRepo.class);
-        startActivity(intent);
-    }
 
     public boolean isExternalStorageReadable() {
         String state = Environment.getExternalStorageState();

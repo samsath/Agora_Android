@@ -46,7 +46,6 @@ public class RegisterActivity extends Activity {
     EditText username,password,firstname,lastname,email;
     ImageView imageview;
     private String imagePath;
-    private static SharedPreferences settings;
     private static String url = "";
     private static String port = "";
 
@@ -63,10 +62,10 @@ public class RegisterActivity extends Activity {
 
         imageview = (ImageView) findViewById(R.id.imageView1);
 
-        settings = this.getSharedPreferences("Agora", MODE_WORLD_READABLE);
+        SharedPreferences settings = this.getSharedPreferences("Agora", MODE_WORLD_READABLE);
 
-        url = settings.getString("agoraURL"," ");
-        port = settings.getString("agoraPort"," ");
+        url = settings.getString("agoraURL", " ");
+        port = settings.getString("agoraPort", " ");
 
     }
 

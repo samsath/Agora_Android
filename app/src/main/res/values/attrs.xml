@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NoteView">
+        <attr name="BackgroundColour" format="color"/>
+        <attr name="TextColour" format="color"/>
+        <attr name="NoteText" format="string"/>
+        <attr name="CommentNum" format="integer"/>
+        <attr name="ShowComments" format="boolean"/>
+    </declare-styleable>
+</resources>

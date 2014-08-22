@@ -2,18 +2,17 @@ package uk.org.samhipwell.agora;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import java.io.File;
-import java.util.ArrayList;
 
 
 
@@ -35,26 +34,16 @@ public class MainActivity extends Activity {
         project = bundle.getString("Project");
         ur = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString();
         fs = new fileSurport(this);
-        Log.e("Agora","URL = "+ur);
-        queryNotes();
+        Log.e("Agora","URL = "+ur+"/"+project);
 
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int columNum = size.x/480;
 
-        final GridView gridView =(GridView)findViewById(R.id.gridView);
-        gridView.setAdapter(new GridAdaptor(this,notelist));
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(MainActivity.this,NoteActivity.class);
-                File note = (File) adapterView.getAdapter().getItem(i);
-                String text = note.getAbsolutePath();
-                Bundle bundle = new Bundle();
-                bundle.putString("path",text);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            }
-        });
+        GridView grdiview = (GridView) findViewById(R.id.gridView);
+        grdiview.setNumColumns(columNum);
+        grdiview.setAdapter(new NoteAdaptor(this,ur+"/"+project));
 
     }
 
@@ -62,7 +51,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.create_repo, menu);
         getActionBar().setTitle(mTitle);
         return true;
     }
@@ -72,47 +61,17 @@ public class MainActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void queryNotes(){
-        //TODO file recursion here
-        if(fs.isExternalStorageWritableReader()) {
-            if (project.equals("all")) {
-                // get all the notes
-                mTitle = "All Notes";
-
-                ArrayList<File> newlist = new ArrayList<File>();
-                File[] check = new File(ur).listFiles();
-
-                for (File f : check) {
-                    if (f.isDirectory()) {
-                        for (File s : f.listFiles()) {
-                            newlist.add(s);
-                        }
-                    } else {
-                        newlist.add(f);
-                    }
-                }
-                File[] test = new File[newlist.size()];
-                for (int i = 0; i < newlist.size(); i++) {
-                    test[i] = newlist.get(i);
-                }
-                notelist = test;
-            } else {
-                // get the notes in the certain file.
-                mTitle = project;
-                ur += "/" + project;
-                // notelist = (List<File>) FileUtils.listFiles(new File(ur),new String[] { "note" },true);
-                notelist = new File(ur).listFiles();
-
-            }
-        }else{
-            Log.e("Agora","Not fiel system readable");
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.createrepo:
+                Intent cintent = new Intent(MainActivity.this,CreateRepo.class);
+                startActivity(cintent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
