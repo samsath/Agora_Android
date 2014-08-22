@@ -1,15 +1,19 @@
 package uk.org.samhipwell.agora;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -97,6 +101,7 @@ public class NoteAdaptor extends BaseAdapter {
             ur = url;
         }
         files = fileList(new File(ur));
+
         for (File f : files){
 
             StringBuilder text = new StringBuilder();
@@ -113,13 +118,22 @@ public class NoteAdaptor extends BaseAdapter {
             }
 
             try{
+                int comNum = 0;
+
                 JSONObject mainObj = new JSONObject(String.valueOf(text));
                 JSONObject noteObject = mainObj.getJSONObject("note");
-                JSONObject commentObject = mainObj.getJSONObject("comment");
+                try{
+                    JSONObject commentObject = mainObj.getJSONObject("comment");
+                    comNum = 0;
+                } catch (JSONException e) {
+                    JSONArray commentArray = mainObj.getJSONArray("comment");
+                    comNum = commentArray.length();
+                }
+
                 String note = noteObject.getString("content");
                 int txcol = Color.parseColor(noteObject.getString("tx"));
                 int bgCol = Color.parseColor(noteObject.getString("bg"));
-                int comNum = commentObject.length();
+
 
                 noteList.add(new noteInfo(f.getAbsolutePath(),note,txcol,bgCol,comNum));
 
@@ -155,6 +169,7 @@ public class NoteAdaptor extends BaseAdapter {
         public Integer bgColor;
         public Integer commentNum;
 
+
         public noteInfo(){}
 
         public noteInfo(String FileLoc,String Body,Integer txColor,Integer bgColor, Integer Comment){
@@ -174,8 +189,13 @@ public class NoteAdaptor extends BaseAdapter {
         }
 
         public void onClick(View v){
-            Log.e("Note", "Note clicked = " + noteFiles.get(position).body);
-            // TODO use the click somehow
+            Log.e("Note", "Note clicked = " + noteFiles.get(position).fileLoc);
+            // TODO on click get sent to the note screen
+            Intent intent = new Intent(context.getApplicationContext(),NoteActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("path",noteFiles.get(position).fileLoc);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
         }
     }
 }

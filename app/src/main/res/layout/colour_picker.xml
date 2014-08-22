@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:dividerPadding="10dp"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/cpick"
+        android:id="@+id/textView"
+        android:singleLine="true"
+        android:textAlignment="center" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="5"
+        android:rowCount="2"
+        android:alignmentMode="alignBounds"
+        android:layout_gravity="center"
+        android:padding="10dp"
+        android:layout_margin="5dp">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_orange"
+            android:background="@drawable/orange"
+            android:onClick="imageClick"
+            android:tag="#ffff6600"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_darkgrey"
+            android:background="@drawable/darkgrey"
+            android:onClick="imageClick"
+            android:tag="#ff2d2d2d"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_blue"
+            android:background="@drawable/blue"
+            android:onClick="imageClick"
+            android:tag="#ff104ba9"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_green"
+            android:background="@drawable/green"
+            android:onClick="imageClick"
+            android:tag="#ff1db312"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_lgrey"
+            android:background="@drawable/lgrey"
+            android:onClick="imageClick"
+            android:tag="#fee0e0e0"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_red"
+            android:background="@drawable/red"
+            android:onClick="imageClick"
+            android:tag="#ffff270d"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_lblue"
+            android:background="@drawable/lblue"
+            android:onClick="imageClick"
+            android:padding="5dp"
+            android:tag="#ff51dee0"
+            android:focusableInTouchMode="false" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_mustard"
+            android:background="@drawable/musturd"
+            android:onClick="imageClick"
+            android:tag="#ffffcb25"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_brown"
+            android:background="@drawable/brown"
+            android:onClick="imageClick"
+            android:tag="#ff834c24"
+            android:padding="5dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_lime"
+            android:background="@drawable/lime"
+            android:onClick="imageClick"
+            android:tag="#ff00ff00"
+            android:padding="5dp" />
+
+    </GridLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/close"
+        android:id="@+id/btnClose"
+        android:onClick="closeClick" />
+
+</LinearLayout>

@@ -84,6 +84,7 @@ public class loginScrenn extends Activity {
             case R.id.action_settings:
                 Intent intent = new Intent(loginScrenn.this,SettingActivity.class);
                 startActivity(intent);
+                return true;
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;

@@ -30,6 +30,7 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
         <activity
             android:name=".StarScreen"
             android:label="@string/title_activity_star_screen" >
@@ -78,6 +79,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.org.samhipwell.agora.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ColourPicker"
+            android:label="@string/title_activity_colour_picker"
+            android:theme="@android:style/Theme.Holo.Dialog" >
+        </activity>
+        <activity
+            android:name=".CommentActivity"
+            android:label="@string/title_activity_comment"
+            android:parentActivityName=".NoteActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uk.org.samhipwell.agora.NoteActivity" />
         </activity>
     </application>
 

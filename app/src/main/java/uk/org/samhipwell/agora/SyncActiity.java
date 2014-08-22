@@ -24,6 +24,7 @@ public class SyncActiity extends Activity {
 
     @Override
     protected void onStart(){
+        super.onStart();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -118,7 +118,7 @@ public class NoteView extends View {
     }
     @Override
     public boolean onTouchEvent(MotionEvent event){
-        Log.e("Note Click", noteText);
+        //Log.e("Note Click", noteText);
         return super.onTouchEvent(event);
 
     }

@@ -29,9 +29,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Bundle bundle = getIntent().getExtras();
-        project = bundle.getString("Project");
+        if(bundle==null){
+            project = "all";
+        }else {
+            project = bundle.getString("Project");
+        }
         ur = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString();
         fs = new fileSurport(this);
         Log.e("Agora","URL = "+ur+"/"+project);

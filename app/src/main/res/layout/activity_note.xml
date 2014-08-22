@@ -9,35 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_NoteBody"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:gravity="top"
+        android:textAlignment="gravity"
+        android:textSize="78dp" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_textColour"
-            android:onClick="textColourClick"
-            android:id="@+id/btn_NoteText" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_BackColour"
-            android:onClick="bgColourClick"
-            android:id="@+id/btn_NoteBG" />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:onClick="noteSaveClick"
-        android:id="@+id/btn_NoteSave" />
 </LinearLayout>

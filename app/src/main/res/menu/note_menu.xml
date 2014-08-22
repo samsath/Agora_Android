@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:icon="@drawable/ic_comment"
+        android:id="@+id/comment"
+        android:title="@string/text_colour"
+        android:showAsAction="always" />
+    <item android:id="@+id/TextColour"
+        android:title="@string/text_colour"
+        android:icon="@drawable/ic_textcol"
+        android:showAsAction="always" />
+    <item android:id="@+id/BGColour"
+        android:title="@string/bgColour"
+        android:icon="@drawable/ic_bgcolour"
+        android:showAsAction="always" />
+    <item android:id="@+id/save"
+        android:title="@string/save"
+        android:icon="@drawable/ic_save"
+        android:showAsAction="always" />
+</menu>
