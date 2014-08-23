@@ -11,7 +11,10 @@ import android.view.MenuItem;
 
 public class StarScreen extends Activity {
 
+    AlarmReciever alarm = new AlarmReciever();
+
     Database db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +24,9 @@ public class StarScreen extends Activity {
         db = new Database(getApplicationContext());
         if(db.islogged()){
             // if someone has logged into the program before then load program down and make an intent
-            //TODO add a service here to pull info from the server
+
+            alarm.setAlarm(this);
+
             Intent intent = new Intent(StarScreen.this, MainActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString("Project","all");
@@ -32,6 +37,8 @@ public class StarScreen extends Activity {
             startActivity(intent);
         }
     }
+
+
 
 
     @Override

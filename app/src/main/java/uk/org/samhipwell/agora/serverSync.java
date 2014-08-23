@@ -41,9 +41,6 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
 
     private Database db;
     JsonGet js;
-    private HttpClient httpclient = new DefaultHttpClient();
-
-    public serverSync(Context contextin){ context = contextin;}
     public String SendBack;
     protected String port;
 
@@ -53,6 +50,10 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
     String hashname = null;
 
     fileSurport fs;
+    private HttpClient httpclient = new DefaultHttpClient();
+
+    public serverSync(Context contextin){ context = contextin;}
+
 
 
 
@@ -154,7 +155,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                                 sendvalues.add(new BasicNameValuePair("file",sendcontent));
                                 sendvalues.add(new BasicNameValuePair("session_key",cookie));
 
-                                httppost.setEntity(new UrlEncodedFormEntity(sendvalues, "UTF-8"));
+                                sendfile.setEntity(new UrlEncodedFormEntity(sendvalues, "UTF-8"));
                                 httpclient.execute(sendfile);
 
 
@@ -168,7 +169,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                                 updatevalues.add(new BasicNameValuePair("file",updatecontent));
                                 updatevalues.add(new BasicNameValuePair("session_key",cookie));
 
-                                httppost.setEntity(new UrlEncodedFormEntity(updatevalues, "UTF-8"));
+                                updatefile.setEntity(new UrlEncodedFormEntity(updatevalues, "UTF-8"));
                                 HttpResponse updateResponse = httpclient.execute(updatefile);
 
                                 fs.writeFile(row.getString("name"), note, updateResponse.toString());

@@ -1,10 +1,13 @@
 package uk.org.samhipwell.agora;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -84,6 +88,7 @@ public class NoteAdaptor extends BaseAdapter {
         note.setId(position);
 
         note.setOnClickListener(new MyOnClickListener(position));
+        note.setOnLongClickListener(new MyLongClickListener(position));
 
         return note;
     }
@@ -196,6 +201,42 @@ public class NoteAdaptor extends BaseAdapter {
             bundle.putString("path",noteFiles.get(position).fileLoc);
             intent.putExtras(bundle);
             context.startActivity(intent);
+        }
+
+
+
+
+    }
+
+    private class MyLongClickListener implements View.OnLongClickListener {
+        private final int position;
+        public MyLongClickListener(int position) {
+            this.position = position;
+        }
+        public boolean onLongClick(final View v) {
+            //TODO delete how to
+            String ur = noteFiles.get(position).fileLoc;
+            Log.e("Note", "Note Long = " + noteFiles.get(position).fileLoc);
+
+            new AlertDialog.Builder(v.getContext())
+                    .setTitle("Delete this note")
+                    .setMessage("Would you like remove this note from the project. This will effect everyone!")
+                    .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            deleteSync dsync = new deleteSync(v.getContext(),noteFiles.get(position).fileLoc);
+                            dsync.execute();
+                        }
+                    })
+                    .setPositiveButton("No",new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Log.d("Agora","Note ' "+noteFiles.get(position).body + "' Not Deleted");
+                        }
+                    })
+                    .show();
+
+            return true;
         }
     }
 }

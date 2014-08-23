@@ -48,6 +48,9 @@ public class NoteView extends View {
         this.textColour = txColour;
         this.bgColour = bgColour;
         this.commentNum = CommentNum;
+        if (CommentNum > 0){
+            showComments = true;
+        }
 
         noteBox = new Paint();
 
@@ -90,11 +93,14 @@ public class NoteView extends View {
         }
         TextPaint tcan = new TextPaint();
         tcan.setColor(textColour);
-        tcan.setTextSize(50);
+        tcan.setTextSize(60);
         tcan.setTextAlign(Paint.Align.LEFT);
         tcan.setAntiAlias(true);
         tcan.setTypeface(Typeface.DEFAULT);
         StaticLayout slText = new StaticLayout("" + usedText,tcan,viewWidth, Layout.Alignment.ALIGN_NORMAL,1,1,true);
+
+
+
         //viewHeight = slText.getHeight()+100;
         //Log.e("Note", viewWidth + "," + viewHeight);
 
@@ -108,11 +114,22 @@ public class NoteView extends View {
 
         // draw the box
         Rect r = new Rect(0, 0, viewWidth, viewHeight);
-        canvas.drawRect(r,noteBox);
-        //Log.e("NoteRext", r.centerX()+","+ r.centerY());
 
+        //Log.e("NoteRext", r.centerX()+","+ r.centerY());
+        canvas.drawRect(r,noteBox);
         canvas.translate(r.centerX()-(viewWidth/2), r.centerY()-(viewHeight/2));
+        if(commentNum>0){
+            Log.e("Agora Note","Has "+commentNum+" Comments");
+
+            noteBox.setColor(Color.WHITE);
+            noteBox.setTextSize(70);
+
+            canvas.drawText(""+commentNum+" Comments",15,viewHeight-20,noteBox);
+        }
+
         slText.draw(canvas);
+
+
 
 
     }

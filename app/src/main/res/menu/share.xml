@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="uk.org.samhipwell.agora.ShareActivity" >
+
+    <item android:id="@+id/shareTocontact"
+        android:title="Send to"
+        android:showAsAction="always"/>
+</menu>

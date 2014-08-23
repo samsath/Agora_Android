@@ -36,5 +36,7 @@
     <string name="close">Close</string>
     <string name="title_activity_colour_picker">ColourPicker</string>
     <string name="title_activity_comment">CommentActivity</string>
+    <string name="title_activity_share">ShareActivity</string>
+    <string name="share">share</string>
 
 </resources>

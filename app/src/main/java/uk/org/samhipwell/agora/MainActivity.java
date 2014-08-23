@@ -2,9 +2,11 @@ package uk.org.samhipwell.agora;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
@@ -32,13 +34,20 @@ public class MainActivity extends Activity {
         Bundle bundle = getIntent().getExtras();
         if(bundle==null){
             project = "all";
+            mTitle = "All Notes";
         }else {
             project = bundle.getString("Project");
+            mTitle = project.replaceAll("_"," ");
         }
         ur = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString();
         fs = new fileSurport(this);
         Log.e("Agora","URL = "+ur+"/"+project);
 
+        start();
+
+    }
+
+    public void start(){
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -47,15 +56,18 @@ public class MainActivity extends Activity {
         GridView grdiview = (GridView) findViewById(R.id.gridView);
         grdiview.setNumColumns(columNum);
         grdiview.setAdapter(new NoteAdaptor(this,ur+"/"+project));
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.create_repo, menu);
-        getActionBar().setTitle(mTitle);
+        if(project.equals("all")) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.project_main, menu);
+        }
+        setTitle(mTitle);
         return true;
     }
 
@@ -69,13 +81,46 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MainActivity.this,SettingActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.createrepo:
-                Intent cintent = new Intent(MainActivity.this,CreateRepo.class);
-                startActivity(cintent);
+            case R.id.projectbutton:
+                Intent pintent = new Intent(MainActivity.this,ProjectList.class);
+                startActivity(pintent);
+                return true;
+            case R.id.createbutton:
+                if(project.equals("all")){
+                    Intent cintent = new Intent(MainActivity.this,CreateRepo.class);
+                    startActivity(cintent);
+                }else{
+                    Bundle nbundle =new Bundle();
+                    nbundle.putString("path",ur+"/"+project);
+                    Intent nintent = new Intent(MainActivity.this,NoteActivity.class);
+                    nintent.putExtras(nbundle);
+                    startActivity(nintent);
+                }
+                return true;
+            case R.id.sharebutton:
+                Intent sintent = new Intent(MainActivity.this,ShareActivity.class);
+                Bundle sbundle = new Bundle();
+                sbundle.putString("path",ur+"/"+project);
+                sintent.putExtras(sbundle);
+                startActivity(sintent);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        start();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
     }
 
 

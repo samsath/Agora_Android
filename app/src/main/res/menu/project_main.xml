@@ -4,14 +4,19 @@
     <item android:id="@+id/projectbutton"
         android:title="projects"
         android:icon="@drawable/notepad"
-        android:showAsAction="withText|ifRoom" />
+        android:showAsAction="always" />
     <item android:id="@+id/createbutton"
         android:title="@string/add"
         android:icon="@drawable/ic_action_new"
-        android:showAsAction="withText|ifRoom" />
+        android:showAsAction="always" />
+    <item android:id="@+id/sharebutton"
+        android:title="@string/share"
+        android:icon="@drawable/ic_share"
+        android:showAsAction="always"
+        />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:icon="@drawable/settings"
-        android:showAsAction="withText|ifRoom" />
+        android:showAsAction="always" />
 </menu>

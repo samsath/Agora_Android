@@ -106,13 +106,13 @@ public class ProjectList extends ListActivity  {
             if (files != null) {
                 for (File item : files) {
                     if (item.isDirectory()) {
-                        ProjectsData rfolder = new ProjectsData(item.getName(), item.getAbsolutePath());
+                        ProjectsData rfolder = new ProjectsData(item.getName());
                         projectList.add(rfolder);
                     }
                 }
 
             } else {
-                projectList.add(new ProjectsData("There is currently no project here.", "null"));
+                projectList.add(new ProjectsData("There is currently no project here."));
             }
 
         }
@@ -132,9 +132,9 @@ public class ProjectList extends ListActivity  {
         public String name;
         public String loc;
 
-        public ProjectsData(String name, String loc){
+        public ProjectsData(String name){
             this.name = name.replaceAll("_"," ");
-            this.loc = loc;
+            this.loc = name;
         }
     }
 
@@ -210,11 +210,9 @@ public class ProjectList extends ListActivity  {
                         // Send the project info to the MainActivity to be displayed
                         Log.d("Agora","Project "+data.name+" Clicked at "+data.loc);
                         Intent intent = new Intent(ProjectList.this, MainActivity.class);
-                        String[] text = new String[2];
-                        text[0] = data.name.toString();
-                        text[1] = data.loc.toString();
+
                         Bundle bundle = new Bundle();
-                        bundle.putStringArray("Project",text);
+                        bundle.putString("Project",data.loc);
 
                         intent.putExtras(bundle);
                         startActivity(intent);

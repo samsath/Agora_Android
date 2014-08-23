@@ -131,6 +131,7 @@ public class NoteActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.note_menu, menu);
+        setTitle("");
         return true;
     }
 
@@ -143,6 +144,12 @@ public class NoteActivity extends Activity {
             case android.R.id.home:
                 noteSave();
                 return true;
+            case R.id.sharebutton:
+                Intent sintent = new Intent(NoteActivity.this,ShareActivity.class);
+                Bundle sbundle = new Bundle();
+                sbundle.putString("path",FilePath);
+                sintent.putExtras(sbundle);
+                startActivity(sintent);
             case R.id.TextColour:
                 // set the text colour
                 colourClick(D_TEXT);

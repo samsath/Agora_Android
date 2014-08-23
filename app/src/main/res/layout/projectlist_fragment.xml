@@ -12,5 +12,6 @@
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Project"
+        android:textSize="35dp"
         />
 </RelativeLayout>
