@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,8 +38,8 @@ public class NoteActivity extends Activity {
 
     public String FilePath;
     EditText content;
-    int textColour;
-    int bgColour;
+    String textColour;
+    String bgColour;
     public int datetime;
     public String uname;
     public String type;
@@ -46,6 +48,7 @@ public class NoteActivity extends Activity {
 
     fileSurport fs;
     JsonGet js;
+    Database db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,7 @@ public class NoteActivity extends Activity {
 
         fs = new fileSurport(this);
         js = new JsonGet();
+        db = new Database(this);
 
         content = (EditText) findViewById(R.id.et_NoteBody);
 
@@ -85,12 +89,12 @@ public class NoteActivity extends Activity {
                     for(int j = 0; j < commentArray.length(); j++){
 
                         String user = commentArray.getJSONObject(j).getString("User");
-                        String datatime = String.valueOf((commentArray.getJSONObject(j).getInt("DateTime")));
+                        String datetime = String.valueOf((commentArray.getJSONObject(j).getInt("DateTime")));
                         String body = commentArray.getJSONObject(j).getString("Body");
 
                         List<String> comment = new ArrayList<String>();
                         comment.add(user);
-                        comment.add(datatime);
+                        comment.add(datetime);
                         comment.add(body);
 
                         Comments.put(j,comment);
@@ -99,18 +103,16 @@ public class NoteActivity extends Activity {
                 datetime = noteObject.getInt("datetime");
                 uname = noteObject.getString("user");
                 ocontent = noteObject.getString("content");
-                textColour = Color.parseColor(noteObject.getString("tx"));
-                bgColour = Color.parseColor(noteObject.getString("bg"));
+                textColour = noteObject.getString("tx");
+                bgColour = noteObject.getString("bg");
                 type = noteObject.getString("type");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-
-
             content.setText(ocontent);
-            content.setBackgroundColor(bgColour);
-            content.setTextColor(textColour);
+            content.setBackgroundColor(Color.parseColor(bgColour));
+            content.setTextColor(Color.parseColor(textColour));
 
         }else{
             // This is to create a new note
@@ -184,12 +186,12 @@ public class NoteActivity extends Activity {
 
                 int type = bundle.getInt("type");
                 if (type == D_TEXT) {
-                    textColour = Color.parseColor(bundle.getString("colour"));
-                    content.setTextColor(textColour);
+                    textColour = bundle.getString("colour");
+                    content.setTextColor(Color.parseColor(textColour));
 
                 } else if (type == D_BACK) {
-                    bgColour = Color.parseColor(bundle.getString("colour"));
-                    content.setBackgroundColor(bgColour);
+                    bgColour = bundle.getString("colour");
+                    content.setBackgroundColor(Color.parseColor(bgColour));
                 }
 
             } else if (requestCode == COMMENT_BACK) {
@@ -202,10 +204,61 @@ public class NoteActivity extends Activity {
 
     public void noteSaveClick() {
         //TODO this will save the note to the file
+        String outputString = "";
+        try {
+            // Josn main
+            JSONObject json = new JSONObject();
+            //Note
+            JSONObject noteJson = new JSONObject();
+            noteJson.put("user", uname);
+            noteJson.put("bg",bgColour);
+            noteJson.put("tx",textColour);
+            noteJson.put("datetime",System.currentTimeMillis());
+            noteJson.put("type",type);
+            noteJson.put("content",content.getText());
+            json.put("note",noteJson);
+            // Comment
+            JSONArray commentJson = new JSONArray();
+            for(int i =0 ; i < Comments.size();i++){
+                JSONObject comment = new JSONObject();
+                comment.put("Uer",Comments.get(i).get(0));
+                comment.put("DateTime",Comments.get(i).get(1));
+                comment.put("Body",Comments.get(i).get(2));
+                commentJson.put(comment);
+            }
+            json.put("comment",commentJson);
+            outputString = json.toString();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("Agora", "Could not create JSON object Crash");
+            finish();
+        }
+
+
+        String url;
         if(typeNote){
             // this is an old note so re-write it
+           url = FilePath;
         }else{
+            String time = String.valueOf(System.currentTimeMillis());
+            String uname = db.getUsername();
+            url = FilePath+"/"+time+uname+"android.note";
+        }
+        try{
+            Log.e("Agora","The Note String === " + outputString);
 
+            File file = new File(url);
+
+            FileWriter output = new FileWriter(file);
+
+            output.write(outputString);
+            output.flush();
+            output.close();
+            finish();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
     }

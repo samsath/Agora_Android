@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/cpick"
-        android:id="@+id/textView"
+        android:id="@+id/tx_username"
         android:singleLine="true"
         android:textAlignment="center" />
 
