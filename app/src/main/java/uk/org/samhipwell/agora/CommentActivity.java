@@ -24,6 +24,7 @@ public class CommentActivity extends ListActivity {
 
     private ArrayList<CommentData> commentList = new ArrayList<CommentData>();
     private ArrayAdapter<CommentData> commentAdapter;
+    public String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class CommentActivity extends ListActivity {
         setContentView(R.layout.activity_comment);
         db = new Database(this);
         Bundle bundle = getIntent().getExtras();
+        url = bundle.getString("path");
         Comments =  (HashMap<Integer,List<String>>) bundle.getSerializable("HashMap");
         convertComments();
     }
@@ -56,11 +58,25 @@ public class CommentActivity extends ListActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId())
+        {
+            case R.id.action_settings:
+                return  true;
+            case android.R.id.home:
+                this.finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed(){
+        Bundle bundle = new Bundle();
+        bundle.putString("path",url);
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        setResult(RESULT_OK,intent);
+        super.onBackPressed();
     }
 
     private void initComments(){
@@ -82,6 +98,7 @@ public class CommentActivity extends ListActivity {
 
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
+        bundle.putString("path",url);
         bundle.putSerializable("HashMap",Comments);
         intent.putExtras(bundle);
 

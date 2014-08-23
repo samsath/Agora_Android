@@ -56,8 +56,13 @@ public class NoteActivity extends Activity {
         setContentView(R.layout.activity_note);
 
         Bundle bundle = getIntent().getExtras();
-        FilePath = bundle.getString("path");
+        if(bundle!=null) {
+            FilePath = bundle.getString("path");
+        }
+        noteLoad();
+    }
 
+    private void noteLoad(){
         fs = new fileSurport(this);
         js = new JsonGet();
         db = new Database(this);
@@ -121,6 +126,7 @@ public class NoteActivity extends Activity {
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -134,6 +140,9 @@ public class NoteActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
+            case android.R.id.home:
+                noteSave();
+                return true;
             case R.id.TextColour:
                 // set the text colour
                 colourClick(D_TEXT);
@@ -144,7 +153,7 @@ public class NoteActivity extends Activity {
                 return true;
             case R.id.save:
                 //save the note
-                noteSaveClick();
+                noteSave();
                 return true;
             case R.id.comment:
                 // Comments of the note
@@ -153,6 +162,19 @@ public class NoteActivity extends Activity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("path",FilePath);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        FilePath = savedInstanceState.getString("path");
+        noteLoad();
     }
 
 
@@ -171,6 +193,7 @@ public class NoteActivity extends Activity {
     public void commentClick(){
         Intent intent = new Intent(NoteActivity.this,CommentActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putString("path",FilePath);
         bundle.putSerializable("HashMap",Comments);
         intent.putExtras(bundle);
 
@@ -195,14 +218,15 @@ public class NoteActivity extends Activity {
                 }
 
             } else if (requestCode == COMMENT_BACK) {
-
+                FilePath = bundle.getString("path");
                 Comments = (HashMap<Integer,List<String>>) bundle.getSerializable("HashMap");
 
             }
         }
     }
 
-    public void noteSaveClick() {
+
+    public void noteSave() {
         //TODO this will save the note to the file
         String outputString = "";
         try {
@@ -221,7 +245,7 @@ public class NoteActivity extends Activity {
             JSONArray commentJson = new JSONArray();
             for(int i =0 ; i < Comments.size();i++){
                 JSONObject comment = new JSONObject();
-                comment.put("Uer",Comments.get(i).get(0));
+                comment.put("User",Comments.get(i).get(0));
                 comment.put("DateTime",Comments.get(i).get(1));
                 comment.put("Body",Comments.get(i).get(2));
                 commentJson.put(comment);

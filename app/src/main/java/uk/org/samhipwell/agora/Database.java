@@ -465,11 +465,11 @@ public class Database extends SQLiteOpenHelper{
 
         String uname ="";
         SQLiteDatabase db = this.getReadableDatabase();
-        String selectQuery = "SELECT '"+ KEY_USERID +"' FROM " + TABLE_LOGIN;
+        String selectQuery = "SELECT * FROM " + TABLE_LOGIN;
         Cursor c = db.rawQuery(selectQuery,null);
         if(c.moveToFirst()) {
             int userid = c.getInt(c.getColumnIndex(KEY_USERID));
-            String usernameQuery = "SELECT '" + KEY_USERNAME + "' FROM " + TABLE_USER + " WHERE " + KEY_ID + " = '" + userid + "';";
+            String usernameQuery = "SELECT " + KEY_USERNAME + " FROM " + TABLE_USER + " WHERE " + KEY_ID + " = '" + userid + "';";
             Cursor name = db.rawQuery(usernameQuery, null);
             if (name.moveToFirst()) {
                 uname = name.getString(0);
