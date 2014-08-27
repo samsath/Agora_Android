@@ -237,6 +237,14 @@ public class NoteActivity extends Activity {
         //TODO this will save the note to the file
         String outputString = "";
         try {
+
+            if(bgColour==null){
+                bgColour = "#e1e1e1";
+            }
+            if(textColour==null){
+                textColour = "#2d2d2d";
+            }
+
             // Josn main
             JSONObject json = new JSONObject();
             //Note
