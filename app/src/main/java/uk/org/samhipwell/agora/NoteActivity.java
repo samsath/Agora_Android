@@ -241,11 +241,11 @@ public class NoteActivity extends Activity {
             JSONObject json = new JSONObject();
             //Note
             JSONObject noteJson = new JSONObject();
-            noteJson.put("user", uname);
+            noteJson.put("user", db.getUsername());
             noteJson.put("bg",bgColour);
             noteJson.put("tx",textColour);
             noteJson.put("datetime",System.currentTimeMillis());
-            noteJson.put("type",type);
+            noteJson.put("type","html");
             noteJson.put("content",content.getText());
             json.put("note",noteJson);
             // Comment

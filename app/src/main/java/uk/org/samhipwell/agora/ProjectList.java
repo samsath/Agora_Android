@@ -69,6 +69,10 @@ public class ProjectList extends ListActivity  {
                 Intent cintent = new Intent(ProjectList.this,CreateRepo.class);
                 startActivity(cintent);
                 return true;
+            case R.id.allnotes:
+                Intent mintent = new Intent(ProjectList.this,MainActivity.class);
+                startActivity(mintent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -145,6 +149,7 @@ public class ProjectList extends ListActivity  {
          */
         Log.d("Agora","ProjectList started");
         super.onStart();
+        projectList.clear();
         queryProjects();
     }
 

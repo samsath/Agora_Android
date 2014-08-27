@@ -38,5 +38,6 @@
     <string name="title_activity_comment">CommentActivity</string>
     <string name="title_activity_share">ShareActivity</string>
     <string name="share">share</string>
+    <string name="allnotes">All Notes</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package uk.org.samhipwell.agora;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -57,7 +58,14 @@ public class deleteSync extends AsyncTask<String,Integer,String> {
 
         repo = db.getRepo(project);
 
+        SharedPreferences settings = context.getSharedPreferences("Agora", 1);
+
+        String url = settings.getString("agoraURL", " ");
+        String port = settings.getString("agoraPort", " ");
+        aurl ="http://"+ url +":"+ port +"/app/";
+
     }
+
 
 
     @Override

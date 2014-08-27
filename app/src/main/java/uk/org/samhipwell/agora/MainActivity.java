@@ -24,6 +24,7 @@ public class MainActivity extends Activity {
     private static ArrayAdapter<File> fileAdaptor;
     private String project;
     private String ur;
+    serverSync sync;
 
     fileSurport fs;
 
@@ -42,7 +43,7 @@ public class MainActivity extends Activity {
         ur = this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).toString();
         fs = new fileSurport(this);
         Log.e("Agora","URL = "+ur+"/"+project);
-
+        sync = new serverSync(this);
         start();
 
     }
@@ -113,6 +114,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart(){
         super.onStart();
+        new serverSync(this).execute();
         start();
     }
 
