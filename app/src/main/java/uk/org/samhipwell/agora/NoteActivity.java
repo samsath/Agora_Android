@@ -93,9 +93,9 @@ public class NoteActivity extends Activity {
                     JSONArray commentArray = mainObj.getJSONArray("comment");
                     for(int j = 0; j < commentArray.length(); j++){
 
-                        String user = commentArray.getJSONObject(j).getString("User");
-                        String datetime = String.valueOf((commentArray.getJSONObject(j).getInt("DateTime")));
-                        String body = commentArray.getJSONObject(j).getString("Body");
+                        String user = commentArray.getJSONObject(j).getString("user");
+                        String datetime = String.valueOf((commentArray.getJSONObject(j).getInt("datetime")));
+                        String body = commentArray.getJSONObject(j).getString("body");
 
                         List<String> comment = new ArrayList<String>();
                         comment.add(user);
@@ -238,10 +238,10 @@ public class NoteActivity extends Activity {
         String outputString = "";
         try {
 
-            if(bgColour==null){
+            if(bgColour.equals("")){
                 bgColour = "#e1e1e1";
             }
-            if(textColour==null){
+            if(textColour.equals("")){
                 textColour = "#2d2d2d";
             }
 
@@ -260,9 +260,9 @@ public class NoteActivity extends Activity {
             JSONArray commentJson = new JSONArray();
             for(int i =0 ; i < Comments.size();i++){
                 JSONObject comment = new JSONObject();
-                comment.put("User",Comments.get(i).get(0));
-                comment.put("DateTime",Comments.get(i).get(1));
-                comment.put("Body",Comments.get(i).get(2));
+                comment.put("user",Comments.get(i).get(0));
+                comment.put("datetime",Comments.get(i).get(1));
+                comment.put("body",Comments.get(i).get(2));
                 commentJson.put(comment);
             }
             json.put("comment",commentJson);

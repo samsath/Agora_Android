@@ -26,7 +26,7 @@ public class StarScreen extends Activity {
             // if someone has logged into the program before then load program down and make an intent
 
             alarm.setAlarm(this);
-
+            new serverSync(this).execute();
             Intent intent = new Intent(StarScreen.this, MainActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString("Project","all");

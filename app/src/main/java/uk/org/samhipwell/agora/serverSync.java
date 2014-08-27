@@ -197,13 +197,6 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
 
     }
 
-
-
-
-
-
-
-
     protected String onPostExecute(String result) {
 
         if(SendBack.equals("ERROR")){

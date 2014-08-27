@@ -33,9 +33,9 @@ public class SyncActiity extends Activity {
                 String cookie = data.get(0).getCookie();
                 //TODO set up the async connection to get the information
 
-                serverSync sync = new serverSync(SyncActiity.this);
+
                 try {
-                    sync.execute().get();
+                    new serverSync(getApplicationContext()).execute().get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
