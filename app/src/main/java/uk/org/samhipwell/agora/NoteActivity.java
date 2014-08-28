@@ -321,5 +321,6 @@ public class NoteActivity extends Activity {
 
         Log.e("Agora","The Note String === " + outputString);
         fs.writeFile(url,outputString);
+        finish();
     }
 }

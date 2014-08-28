@@ -27,7 +27,8 @@
         android:id="@+id/tx_username"
         android:layout_marginTop="71dp"
         android:layout_toStartOf="@+id/btn_Setting_save"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:textColor="#ffe1e1e1" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -46,7 +47,8 @@
         android:id="@+id/porttext"
         android:layout_below="@+id/etURL"
         android:layout_alignStart="@+id/tx_username"
-        android:layout_marginTop="35dp" />
+        android:layout_marginTop="35dp"
+        android:textColor="#ffe1e1e1" />
 
     <EditText
         android:layout_width="wrap_content"

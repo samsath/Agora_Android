@@ -108,14 +108,16 @@ public class NoteView extends View {
         noteBox.setAntiAlias(true);
 
         //set the background colour
-        noteBox.setColor(bgColour);
-
+        noteBox.setColor(Color.parseColor("#008080"));
         // draw the box
-        Rect r = new Rect(0, 0, viewWidth, viewHeight);
-
+        Rect ra = new Rect(0, 0, viewWidth, viewHeight);
+        canvas.drawRect(ra,noteBox);
+        //canvas.translate(ra.centerX()-(viewWidth/2)-20, ra.centerY()-(viewHeight/2)-20);
+        Rect rb = new Rect(2, 2, viewWidth-10, viewHeight-10);
+        noteBox.setColor(bgColour);
         //Log.e("NoteRext", r.centerX()+","+ r.centerY());
-        canvas.drawRect(r,noteBox);
-        canvas.translate(r.centerX()-(viewWidth/2), r.centerY()-(viewHeight/2));
+        canvas.drawRect(rb,noteBox);
+        canvas.translate(rb.centerX()-(viewWidth/2), rb.centerY()-(viewHeight/2));
         if(commentNum>0){
             Log.e("Agora Note","Has "+commentNum+" Comments");
 
@@ -126,11 +128,9 @@ public class NoteView extends View {
         }
 
         slText.draw(canvas);
-
-
-
-
     }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event){
         //Log.e("Note Click", noteText);

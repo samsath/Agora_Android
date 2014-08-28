@@ -35,7 +35,7 @@ public class StarScreen extends Activity {
 
                     alarm.setAlarm(getApplicationContext());
                     new serverSync(getApplicationContext()).execute();
-                    Intent intent = new Intent(StarScreen.this, SyncActiity.class);
+                    Intent intent = new Intent(StarScreen.this, MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("Project", "all");
                     intent.putExtras(bundle);
