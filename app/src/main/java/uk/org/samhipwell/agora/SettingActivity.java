@@ -10,6 +10,10 @@ import android.widget.EditText;
 
 
 public class SettingActivity extends Activity {
+    /**
+     * This is the activity which the user can set the url and port number of the server
+     * to allow them to send information to it. Saves them in the system preferences.
+     */
 
     static SharedPreferences settings;
     static SharedPreferences.Editor editor;

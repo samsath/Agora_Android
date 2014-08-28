@@ -22,6 +22,10 @@ import java.util.ArrayList;
 
 
 public class ShareActivity extends ListActivity {
+    /**
+     * This is the activty which when the user wants to share a project or note they click on the
+     * individuals they want to share to then it uses the shareSync to send the information off.
+     */
 
     public String project;
     public String note;
@@ -70,6 +74,10 @@ public class ShareActivity extends ListActivity {
     }
 
     public void readContacts(){
+        /*
+            Reads the contact list saved on the phone and produces the contact details (name and email)
+            which is then used to create a list for the user to click on.
+         */
         ContentResolver cr = getContentResolver();
         Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
         if(cur.getCount()>0){

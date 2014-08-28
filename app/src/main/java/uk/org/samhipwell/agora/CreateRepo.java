@@ -1,12 +1,9 @@
 package uk.org.samhipwell.agora;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,21 +15,8 @@ import java.io.IOException;
 
 public class CreateRepo extends Activity {
 
-    private addRepo_Service.addRepoBinder repoService = null;
+    fileSurport fs;
     EditText repoName;
-
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            repoService = (addRepo_Service.addRepoBinder) service;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            repoService = null;
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +24,7 @@ public class CreateRepo extends Activity {
         setContentView(R.layout.activity_create_repo);
 
         repoName = (EditText) findViewById(R.id.et_reponame);
-        this.bindService(new Intent(this, addRepo_Service.class),serviceConnection, Context.BIND_AUTO_CREATE);
+        fs = new fileSurport(getApplicationContext());
     }
 
 
@@ -70,9 +54,9 @@ public class CreateRepo extends Activity {
          * If it works then takes the user to the project screen, else display message.
          */
         String repo = repoName.getText().toString();
-        boolean item = repoService.create_repo(this,repo);
+        String item = fs.create_repo(this,repo);
 
-        if(item){
+        if(!item.isEmpty()){
             Intent intent = new Intent(CreateRepo.this,ProjectList.class);
             startActivity(intent);
         }else{

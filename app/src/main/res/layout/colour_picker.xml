@@ -32,7 +32,8 @@
             android:background="@drawable/orange"
             android:onClick="imageClick"
             android:tag="#ffff6600"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/orange" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
             android:background="@drawable/darkgrey"
             android:onClick="imageClick"
             android:tag="#ff2d2d2d"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/dgrey"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -50,7 +52,8 @@
             android:background="@drawable/blue"
             android:onClick="imageClick"
             android:tag="#ff104ba9"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/blue"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -59,7 +62,8 @@
             android:background="@drawable/green"
             android:onClick="imageClick"
             android:tag="#ff1db312"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/green"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -68,7 +72,8 @@
             android:background="@drawable/lgrey"
             android:onClick="imageClick"
             android:tag="#fee0e0e0"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/lgrey"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -77,7 +82,8 @@
             android:background="@drawable/red"
             android:onClick="imageClick"
             android:tag="#ffff270d"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/red"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -87,7 +93,7 @@
             android:onClick="imageClick"
             android:padding="5dp"
             android:tag="#ff51dee0"
-            android:focusableInTouchMode="false" />
+            android:contentDescription="@string/blue"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -96,7 +102,8 @@
             android:background="@drawable/musturd"
             android:onClick="imageClick"
             android:tag="#ffffcb25"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/mustard"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -105,7 +112,8 @@
             android:background="@drawable/brown"
             android:onClick="imageClick"
             android:tag="#ff834c24"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/brown"/>
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -114,7 +122,8 @@
             android:background="@drawable/lime"
             android:onClick="imageClick"
             android:tag="#ff00ff00"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:contentDescription="@string/lime"/>
 
     </GridLayout>
 

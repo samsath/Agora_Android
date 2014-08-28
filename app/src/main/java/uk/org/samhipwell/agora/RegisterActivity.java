@@ -40,8 +40,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 
-
 public class RegisterActivity extends Activity {
+    /**
+     * This is the activity which creates the user profile and sends it to the server
+     */
     public static final int RESULT_OK = 7;
     EditText username,password,firstname,lastname,email;
     ImageView imageview;
@@ -126,6 +128,10 @@ public class RegisterActivity extends Activity {
 
 
     public void btnSave(View view) throws ExecutionException, InterruptedException {
+        /**
+         * This collects the user info then sends the check to the server and sees if that username
+         * is taken if it is, it toasts the error if not adds it.
+         */
 
         List<String> data = new ArrayList<String>();
 
@@ -181,6 +187,10 @@ public class RegisterActivity extends Activity {
     }
 
     private class RegisterCheck extends AsyncTask<List<String>,Integer,Boolean>{
+        /**
+         *  This communicates with the server and see if some one already has that username
+         *  and if not adds them to the server.
+         */
         protected JSONObject jsonResult = null;
         HttpClient httpclient = new DefaultHttpClient();
         @Override

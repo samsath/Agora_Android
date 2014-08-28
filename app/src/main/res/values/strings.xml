@@ -39,5 +39,30 @@
     <string name="title_activity_share">ShareActivity</string>
     <string name="share">share</string>
     <string name="allnotes">All Notes</string>
+    <string name="project">projects</string>
+    <string name="sendto">Send to</string>
+    <string name="projectnamehere">Project name here!</string>
+    <string name="smallt">Small Text</string>
+    <string name="mediumt">Medium Text</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="signin">Sign in</string>
+    <string name="register">Register</string>
+    <string name="noteurl">Agora Note URL:</string>
+    <string name="firstname">First Name</string>
+    <string name="portnum">Port number</string>
+    <string name="lastname">Last Name</string>
+    <string name="email">Email</string>
+    <string name="thumbuser">Thumbnail of user</string>
+    <string name="userphoto">Userphoto</string>
+    <string name="lime">lime</string>
+    <string name="brown">brown</string>
+    <string name="mustard">mustard</string>
+    <string name="blue">blue</string>
+    <string name="red">red</string>
+    <string name="lgrey">lgrey</string>
+    <string name="green">green</string>
+    <string name="dgrey">darkgrey</string>
+    <string name="orange">orange</string>
 
 </resources>

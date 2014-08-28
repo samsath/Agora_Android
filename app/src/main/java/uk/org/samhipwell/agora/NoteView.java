@@ -17,6 +17,9 @@ import android.view.View;
 
 
 public class NoteView extends View {
+    /**
+     * This here is a custom view to be inserted into the grid layout so that the user can interact with it.
+     */
 
     // Text colour
     private int textColour = Color.WHITE;
@@ -79,7 +82,7 @@ public class NoteView extends View {
 
     @Override
     protected void onDraw(Canvas canvas){
-        // draw the actuale item
+        // draw the actuale note for the view
 
         String usedText;
 
@@ -98,11 +101,6 @@ public class NoteView extends View {
         tcan.setAntiAlias(true);
         tcan.setTypeface(Typeface.DEFAULT);
         StaticLayout slText = new StaticLayout("" + usedText,tcan,viewWidth, Layout.Alignment.ALIGN_NORMAL,1,1,true);
-
-
-
-        //viewHeight = slText.getHeight()+100;
-        //Log.e("Note", viewWidth + "," + viewHeight);
 
         //Box working out
         // the box properties

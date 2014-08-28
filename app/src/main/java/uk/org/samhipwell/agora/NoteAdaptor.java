@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,8 +15,6 @@ import android.widget.GridView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,27 +24,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by sam on 22/08/14.
- */
+
 public class NoteAdaptor extends BaseAdapter {
 
-    private Context context;
-    private String url;
-    private List<noteInfo> noteFiles = new ArrayList<noteInfo>();
-    /*
-    private List<noteInfo> noteFiles = new ArrayList<noteInfo>(){{
-        add(new noteInfo("///","Helllo there how are you Im greate thank you ust making sure it all works great and no problems", Color.parseColor("#ff0099"),Color.parseColor("#ffff66"),0));
-        add(new noteInfo("//","HI you ok",Color.parseColor("#332fff"),Color.parseColor("#ffffff"),0));
-        add(new noteInfo("///","This is the third attempt of the layout and see if the thing will pop up and see how it will go through it",Color.parseColor("#ffffff"),Color.parseColor("#000000"),0));
-        add(new noteInfo("////","The fourth note to see how it will go down now.",Color.parseColor("#123987"),Color.parseColor("#765098"),0));
-    }}
+    /**
+     * This adaptor creates the grid view on the main activty.
      */
+    public static final int LEFT = 16;
+    private Context context;
+    private List<noteInfo> noteFiles = new ArrayList<noteInfo>();
+
 
     public NoteAdaptor(Context contexts,String urls) {
         context = contexts;
-        url = urls;
-        Log.e("Note",url);
+        String url = urls;
+        Log.e("Note", url);
         noteFiles.addAll(getFiles(url));
     }
 
@@ -70,13 +61,15 @@ public class NoteAdaptor extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-
+        /*
+            Produces the view layout
+         */
         NoteView note;
 
         if (view == null) {
             note = new NoteView(context);
             note.setLayoutParams(new GridView.LayoutParams(480, 410));
-            note.setPadding(16, 16,16, 16);
+            note.setPadding(LEFT, LEFT, LEFT, LEFT);
         } else {
             note = (NoteView) view;
         }
@@ -152,6 +145,9 @@ public class NoteAdaptor extends BaseAdapter {
     }
 
     private List<File> fileList(File path){
+        /*
+            Produces a list of files. If give location of folder it goes through the levels
+         */
         ArrayList<File> file =  new ArrayList<File>();
         File[] files = path.listFiles();
         for(File f : files){
@@ -186,7 +182,13 @@ public class NoteAdaptor extends BaseAdapter {
         }
     }
 
+    /**
+     * This controls the touch aspects of the interface.
+     */
     class MyOnClickListener implements View.OnClickListener {
+        /*
+            Single click sends an intent to open the note.
+         */
         private final int position;
 
         public MyOnClickListener(int position) {
@@ -203,12 +205,13 @@ public class NoteAdaptor extends BaseAdapter {
             context.startActivity(intent);
         }
 
-
-
-
     }
 
     private class MyLongClickListener implements View.OnLongClickListener {
+        /*
+            Long click opens up a dialogue which then asks you if you want to delete the note.
+            By delete it just adds .delete to the end so it still can be restored if need be.
+         */
         private final int position;
         public MyLongClickListener(int position) {
             this.position = position;

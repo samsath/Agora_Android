@@ -8,6 +8,9 @@ import android.os.IBinder;
 import android.os.PowerManager;
 
 public class SchedualService extends Service {
+    /**
+     * This is a service to help with the alarmmanager and schedual the async task.
+     */
     private static final String TAG = "Agora";
     private PowerManager.WakeLock wakeLock;
 
@@ -21,14 +24,12 @@ public class SchedualService extends Service {
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,TAG);
         wakeLock.acquire();
 
-        serverSync sync = new serverSync(this);
-
         ConnectivityManager con = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if(!con.getBackgroundDataSetting()){
             stopSelf();
             return;
         }
-         sync.execute();
+        new serverSync(this).execute();
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

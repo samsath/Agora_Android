@@ -12,22 +12,28 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
 public class CommentActivity extends ListActivity {
-    public HashMap<Integer,List<String>> Comments = new HashMap<Integer, List<String>>();
-    Database db;
 
+    /**
+     * This activity is to add comments and view comments to the specific note.
+     */
+    // set up for th list inflation to show the different comments.
+    public HashMap<Integer,List<String>> Comments = new HashMap<Integer, List<String>>();
     private ArrayList<CommentData> commentList = new ArrayList<CommentData>();
     private ArrayAdapter<CommentData> commentAdapter;
     public String url;
 
+    // database access is needed to get hold of the user logged.
+    Database db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // The comment list is sent from the notes to here in a hashmap and then send back.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         db = new Database(this);
@@ -38,6 +44,7 @@ public class CommentActivity extends ListActivity {
     }
 
     private void convertComments() {
+        // turns the hashmap of comments into a easier form the inflater to read.
         for(int i =0; i<Comments.size(); i++){
             CommentData c = new CommentData(Comments.get(i).get(0),Comments.get(i).get(1),Comments.get(i).get(2));
             commentList.add(c);
@@ -71,6 +78,10 @@ public class CommentActivity extends ListActivity {
 
     @Override
     public void onBackPressed(){
+        /*
+            as the way the note activty is started it doesn't keep it's note location so each time
+            it is started it need to be sent the note location.
+        */
         Bundle bundle = new Bundle();
         bundle.putString("path",url);
         Intent intent = new Intent();
@@ -85,6 +96,9 @@ public class CommentActivity extends ListActivity {
     }
 
     public void btnCommentSave(View view) {
+        /*
+            Takes the input and add the new comment to the file then sends it back to the note activity.
+         */
         EditText content = (EditText)findViewById(R.id.ed_comment);
         long time = System.currentTimeMillis();
         String user = db.getUsername();

@@ -275,36 +275,6 @@ public class Database extends SQLiteOpenHelper{
         return us;
     }
 
-    public List<User> getAllUsers(){
-        /**
-         * Gets all the users on the system
-         */
-        List<User> users = new ArrayList<User>();
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT * FROM " + TABLE_USER;
-
-        Log.e(LOG,selectQuery);
-
-        Cursor c = db.rawQuery(selectQuery,null);
-
-        if(c!=null){
-            if(c.moveToFirst()){
-                do{
-                    User us = new User();
-                    us.setId(c.getInt(c.getColumnIndex(KEY_ID)));
-                    us.setUsername(c.getString(c.getColumnIndex(KEY_USERNAME)));
-                    us.setFirst_name(c.getString(c.getColumnIndex(KEY_FNAME)));
-                    us.setLast_name(c.getString(c.getColumnIndex(KEY_LNAME)));
-                    us.setEmail(c.getString(c.getColumnIndex(KEY_EMAIL)));
-                    us.setPhoto(c.getString(c.getColumnIndex(KEY_PHOTO)));
-
-                    users.add(us);
-                }while(c.moveToNext());
-            }
-        }
-        return users;
-    }
 
     public int updateUser(User use){
         /**
@@ -422,7 +392,7 @@ public class Database extends SQLiteOpenHelper{
 
         Cursor c = db.rawQuery(selectQuery,null);
 
-        if(c.getCount() > 0 ){
+        if(c.getCount()>0){
             return true;
         }else {
             return false;

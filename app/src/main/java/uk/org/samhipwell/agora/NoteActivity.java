@@ -19,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +27,11 @@ import java.util.List;
 
 
 public class NoteActivity extends Activity {
+    /**
+     * This is the activity to show the whole note
+     */
 
     public static final int COLOUR_PICKER = 5555;
-    public static final int ACTIVITY_REQUEST_CODE = 6666;
     public static final int COMMENT_BACK = 4444;
     public static final int RESULT_OK = 4;
     public static final int D_TEXT = 10;
@@ -47,7 +50,6 @@ public class NoteActivity extends Activity {
     public HashMap<Integer,List<String>> Comments = new HashMap<Integer, List<String>>();
 
     fileSurport fs;
-    JsonGet js;
     Database db;
 
     @Override
@@ -56,16 +58,20 @@ public class NoteActivity extends Activity {
         setContentView(R.layout.activity_note);
 
         Bundle bundle = getIntent().getExtras();
+
+        // if there is a bundle then it loads the note if not creates a blank one.
         if(bundle!=null) {
             FilePath = bundle.getString("path");
         }
+        fs = new fileSurport(this);
+        db = new Database(this);
         noteLoad();
     }
 
     private void noteLoad(){
-        fs = new fileSurport(this);
-        js = new JsonGet();
-        db = new Database(this);
+        /**
+         * If a file is sent to it then it will load the file up if not it creates a blank file.
+         */
 
         content = (EditText) findViewById(R.id.et_NoteBody);
 
@@ -84,6 +90,8 @@ public class NoteActivity extends Activity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+
             try {
                 JSONObject mainObj = new JSONObject(String.valueOf(text));
                 JSONObject noteObject = mainObj.getJSONObject("note");
@@ -171,6 +179,10 @@ public class NoteActivity extends Activity {
         }
     }
 
+    /**
+     * This here is to save the current note object if it is closed and reopened. Only works on the
+     * already saved notes.
+     */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
@@ -186,6 +198,9 @@ public class NoteActivity extends Activity {
 
 
     public void colourClick(int type){
+        /**
+         * Starts the colour picker activity with what the colour is for.
+         */
         Intent intent = new Intent(NoteActivity.this,ColourPicker.class);
 
         String active = String.valueOf(COLOUR_PICKER);
@@ -198,6 +213,9 @@ public class NoteActivity extends Activity {
     }
 
     public void commentClick(){
+        /**
+         * Starts the comment activity and send the comments to the activty.
+         */
         Intent intent = new Intent(NoteActivity.this,CommentActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("path",FilePath);
@@ -210,6 +228,11 @@ public class NoteActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        /**
+         * This waits for a reply for both the comment and colour activity and depending on
+         * what information it sends back it hands it differently.
+         */
+
         if(resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             if (requestCode == COLOUR_PICKER) {
@@ -234,16 +257,22 @@ public class NoteActivity extends Activity {
 
 
     public void noteSave() {
-        //TODO this will save the note to the file
+        /**
+         * Saves the note to the file
+         */
         String outputString = "";
         try {
-
+            // sets default background colours if the user didn't specify any.
             if(bgColour.equals("")){
                 bgColour = "#e1e1e1";
             }
             if(textColour.equals("")){
                 textColour = "#2d2d2d";
             }
+
+            /*
+                This is to arrange the file info into the json format
+             */
 
             // Josn main
             JSONObject json = new JSONObject();
@@ -274,7 +303,9 @@ public class NoteActivity extends Activity {
             finish();
         }
 
-
+        /*
+            Sort out if the file is a new one so loads it or creates a new one.
+         */
         String url;
         if(typeNote){
             // this is an old note so re-write it
@@ -284,23 +315,11 @@ public class NoteActivity extends Activity {
             String uname = db.getUsername();
             url = FilePath+"/"+time+uname+"android.note";
         }
-        try{
-            Log.e("Agora","The Note String === " + outputString);
+        /*
+            writes the string to the system
+         */
 
-            File file = new File(url);
-
-            FileWriter output = new FileWriter(file);
-
-            output.write(outputString);
-            output.flush();
-            output.close();
-            finish();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Log.e("Agora","The Note String === " + outputString);
+        fs.writeFile(url,outputString);
     }
-
-
 }

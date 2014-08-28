@@ -3,6 +3,6 @@
     tools:context="uk.org.samhipwell.agora.ShareActivity" >
 
     <item android:id="@+id/shareTocontact"
-        android:title="Send to"
+        android:title="@string/sendto"
         android:showAsAction="always"/>
 </menu>

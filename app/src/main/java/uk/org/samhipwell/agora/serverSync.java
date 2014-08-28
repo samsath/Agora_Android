@@ -30,6 +30,10 @@ import java.util.Map;
 
 
 public class serverSync extends AsyncTask<String, Integer, JSONObject> {
+    /**
+     * This is the main class for the async communication with the server and intern the exchange
+     * of user's notes.
+     */
 
     private final static int GET = 5;
     private final static int SEND = 7;
@@ -38,9 +42,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
     private Context context;
     private NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
 
-
     private Database db;
-    JsonGet js;
     public String SendBack;
     protected String port;
 
@@ -55,9 +57,6 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
     public serverSync(Context contextin){ context = contextin;}
 
 
-
-
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -68,13 +67,15 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
         aurl ="http://"+ url +":"+ port +"/app/";
 
         fs = new fileSurport(context);
-        js = new JsonGet();
         db = new Database(context);
 
     }
 
     @Override
     protected JSONObject doInBackground(String... parameter) {
+        /*
+            The main activity which goes first a section building up the profile of the user's notes.
+         */
 
         List<NameValuePair> postValues = new ArrayList<NameValuePair>(2);
         List<Login> det = db.getLogin();
@@ -83,6 +84,9 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
         //Log.d("Agora cookie",cookie);
         postValues.add(new BasicNameValuePair("session_key",cookie));
 
+        /*
+            Send the user cookie to get info of what project the user has.
+         */
         try {
             HttpPost httppost = new HttpPost(aurl+"data/user/");
             httppost.setEntity(new UrlEncodedFormEntity(postValues, "UTF-8"));
@@ -91,7 +95,7 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
             HttpEntity entity = reponse.getEntity();
 
 
-            String result = js.convert(entity.getContent());
+            String result = fs.readEntry(entity.getContent());
 
 
             JSONArray array = new JSONArray(result);
@@ -114,14 +118,16 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                         rep.setUrl(fs.create_repo(context, row.getString("name")));
                         db.createRepo(rep, user_id);
                     }
-
+                    /*
+                       Go through the project list and ask for a list of notes
+                     */
                     HttpPost Repopost = new HttpPost(aurl+"repo/"+row.getString("url")+"/");
                     Repopost.setEntity(new UrlEncodedFormEntity(postValues, "UTF-8"));
                     HttpResponse RepoResp = httpclient.execute(Repopost);
                     HttpEntity Repoen = RepoResp.getEntity();
 
 
-                    String Reporesult = js.convert(Repoen.getContent());
+                    String Reporesult = fs.readEntry(Repoen.getContent());
 
                     //Log.e("Agora","Repo List ="+Reporesult);
                     JSONArray RepArray = new JSONArray(Reporesult);
@@ -132,6 +138,10 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                     }
                     //Log.e("Agora Server Reply List",serverList.toString());
                     Map<String,Integer> getList = fs.compareList(serverList, projectName);
+
+                    /*
+                        Compare the list of files and if there is difference get them from the server
+                     */
 
                     for(Map.Entry<String,Integer> item : getList.entrySet()){
                         String note = item.getKey().substring(0, item.getKey().length() - 5).toLowerCase();

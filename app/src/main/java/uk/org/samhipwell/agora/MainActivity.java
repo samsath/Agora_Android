@@ -19,6 +19,12 @@ import java.io.File;
 
 
 public class MainActivity extends Activity {
+
+    /**
+     * This is the main activity, and will display the notes. It can either display all the notes, or
+     * it can display a notes in a certain project. Each note is displayed on a grid and is
+     */
+
     private CharSequence mTitle;
     private File[] notelist;
     private static ArrayAdapter<File> fileAdaptor;
@@ -30,6 +36,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // if there isn't a bundle then the grid will be filled with all notes else just project notes.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Bundle bundle = getIntent().getExtras();
@@ -49,6 +56,10 @@ public class MainActivity extends Activity {
     }
 
     public void start(){
+        /*
+            This is to generate the grid of the notes. Each time the activity starts.
+            Works out how many columns there should be from screen size.
+         */
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -82,10 +93,12 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(MainActivity.this,SettingActivity.class);
                 startActivity(intent);
                 return true;
+
             case R.id.projectbutton:
                 Intent pintent = new Intent(MainActivity.this,ProjectList.class);
                 startActivity(pintent);
                 return true;
+
             case R.id.createbutton:
                 if(project.equals("all")){
                     Intent cintent = new Intent(MainActivity.this,CreateRepo.class);
@@ -98,14 +111,19 @@ public class MainActivity extends Activity {
                     startActivity(nintent);
                 }
                 return true;
+
             case R.id.sharebutton:
                 Intent sintent = new Intent(MainActivity.this,ShareActivity.class);
                 Bundle sbundle = new Bundle();
                 sbundle.putString("path",ur+"/"+project);
                 sintent.putExtras(sbundle);
                 startActivity(sintent);
-
                 return true;
+
+            case R.id.action_sync:
+                new serverSync(this).execute();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -114,7 +132,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart(){
         super.onStart();
-        new serverSync(this).execute();
         start();
     }
 

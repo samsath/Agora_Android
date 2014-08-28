@@ -2,20 +2,22 @@ package uk.org.samhipwell.agora;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by sam on 20/08/14.
- */
 public class fileSurport {
+    /**
+     * This class is to be a set of methods to work on the filesystem.
+     */
 
     public Context context;
     private final static int GET = 5;
@@ -26,60 +28,80 @@ public class fileSurport {
         context = c;
     }
 
-    public String readFile(String projectname, String filename){
+    public boolean isExternalStorageWritableReader(){
+        /*
+            Check if the file system is able to be written to.
+         */
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     *  The readFile is has two options of input to either deal with url or finding the note itself.
+     */
+
+    public String readFile(String projectname, String filename)throws IOException{
 
         if(isExternalStorageWritableReader()){
-            try{
 
-                String uri = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+ projectname.replaceAll(" ", "_")+"/"+filename;
-                File file = new File(uri);
-                FileInputStream input = new FileInputStream(file);
+            String uri = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+ projectname.replaceAll(" ", "_")+"/"+filename;
+            File file = new File(uri);
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while((line = reader.readLine())!=null) {
-                    sb.append(line);
-                }
-                reader.close();
-                return sb.toString();
+            String output = readEntry(new FileInputStream(file));
+            return output;
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }
+        return null;
+    }
+
+    public String readFile(String uri) throws IOException {
+        if(isExternalStorageWritableReader()) {
+
+            File file = new File(uri);
+
+            String output = readEntry(new FileInputStream(file));
+            return output;
         }
 
         return null;
     }
 
-    public String readFile(String uri){
-        if(isExternalStorageWritableReader()){
-            try{
-                File file = new File(uri);
-                FileInputStream input = new FileInputStream(file);
+    public String readEntry (InputStream input) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input), 8);
+        StringBuilder buidler = new StringBuilder();
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while((line = reader.readLine())!=null) {
-                    sb.append(line);
-                }
-                reader.close();
-                return sb.toString();
+        String line;
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        while((line =  reader.readLine()) != null){
+            buidler.append(line + "\n");
         }
-        return null;
+        return buidler.toString();
     }
+
 
     public void writeFile(String projectname, String filename, String content) {
+        /**
+         * This writes a string on to a selected file.
+         */
+
+        String uri = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+ projectname.replaceAll(" ", "_")+"/"+filename;
+        //Log.d("Agora file uri",uri);
+        writeEntiry(uri,content);
+
+    }
+
+    public void writeFile(String url, String content){
+        writeEntiry(url,content);
+    }
+
+    public void writeEntiry(String url, String content){
         if(isExternalStorageWritableReader()){
-            try {
-                String uri = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+ projectname.replaceAll(" ", "_")+"/"+filename;
-                //Log.d("Agora file uri",uri);
-                File file = new File(uri);
+            try{
+                File file = new File(url);
 
                 FileWriter output = new FileWriter(file);
                 output.write(content);
@@ -92,7 +114,6 @@ public class fileSurport {
             }
         }
     }
-
 
     public Map<String,Integer> compareList(Map<String, Long> serverList, String projectName) {
         /***
@@ -129,23 +150,10 @@ public class fileSurport {
         return results;
     }
 
-    public boolean isExternalStorageWritableReader(){
-        String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-
-
-
     public String create_repo(Context context, String name) {
         /**
          * The idea here is to create a new repository in the app data file on external storage.
-         * Once created it will be populated with a .git repo
+         *
          */
         File file = null;
         if (isExternalStorageWritableReader()) {
@@ -154,15 +162,9 @@ public class fileSurport {
 
             if (!file.mkdirs()) {
                 // if the directory can't be made then this error will be logged
-                // Log.d("GitTest", "Directory not created");
+                Log.e("Agora", "Directory not created");
                 return null;
             }
-
-            // This part of the function then creates the git repo in the folder.
-
-
-            //Log.d("GitTest", "Repository Created");
-
 
         }
         return String.valueOf(file.getAbsolutePath());

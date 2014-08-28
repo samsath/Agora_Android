@@ -12,6 +12,9 @@ import java.util.concurrent.ExecutionException;
 
 
 public class SyncActiity extends Activity {
+    /**
+     * This activty is a place screen so when the async task is first going it can show that it is working.
+     */
 
     private final int DURATION = 3000;
     @Override

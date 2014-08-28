@@ -4,6 +4,9 @@ package uk.org.samhipwell.agora;
  * Created by sam on 15/08/14.
  */
 public class Login {
+    /**
+     * This is for the database entries so I can easily work on them
+     */
     long userid;
     String cookie;
 

@@ -3,7 +3,8 @@
     android:id="@+id/Projects"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="visible" >
+    android:visibility="visible"
+    android:background="#ff2d2d2d">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,7 +12,7 @@
         android:id="@+id/Projectname"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Project"
-        android:textSize="35dp"
-        />
+        android:text="@string/project"
+        android:textSize="35sp"
+        android:textColor="#ffe1e1e1" />
 </RelativeLayout>

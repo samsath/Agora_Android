@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="uk.org.samhipwell.agora.MainActivity" >
     <item android:id="@+id/projectbutton"
-        android:title="projects"
+        android:title="@string/project"
         android:icon="@drawable/notepad"
         android:showAsAction="withText|ifRoom" />
     <item android:id="@+id/createbutton"
@@ -13,5 +13,9 @@
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:icon="@drawable/settings"
+        android:showAsAction="withText|ifRoom" />
+    <item android:id="@+id/action_sync"
+        android:title="Sync Projects"
+        android:icon="@drawable/ic_sync"
         android:showAsAction="withText|ifRoom" />
 </menu>

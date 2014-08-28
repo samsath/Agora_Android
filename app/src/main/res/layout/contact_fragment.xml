@@ -5,17 +5,20 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/contact"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#ff2d2d2d">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/contactThumb" />
+        android:id="@+id/contactThumb"
+        android:contentDescription="@string/thumbuser" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/contactName" />
+        android:text="@string/mediumt"
+        android:id="@+id/contactName"
+        android:textColor="#ffff6600" />
 </LinearLayout>

@@ -6,16 +6,18 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".AddPerson" >
+    tools:context=".AddPerson"
+    android:background="#ff2d2d2d">
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="200px"
-        android:layout_height="200px"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:onClick="ImageViewClick"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/ic_launcher"
+        android:contentDescription="@string/userphoto" />
 
     <TextView
         android:id="@+id/textView1"
@@ -23,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/imageView1"
         android:layout_below="@+id/imageView1"
-        android:text="First Name"
+        android:text="@string/firstname"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -34,7 +36,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView1"
         android:ems="10"
-        android:inputType="textPersonName" >
+        android:inputType="textPersonName"
+        android:textColor="#ffe1e1e1">
 
 
     </EditText>
@@ -45,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/reg_firstname"
         android:layout_below="@+id/reg_firstname"
-        android:text="Last Name"
+        android:text="@string/lastname"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -56,7 +59,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/tx_comment_body"
         android:ems="10"
-        />
+        android:textColor="#ffe1e1e1" />
 
     <TextView
         android:id="@+id/textView3"
@@ -64,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/reg_lastname"
         android:layout_below="@+id/reg_lastname"
-        android:text="Email"
+        android:text="@string/email"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -75,14 +78,15 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/textView3"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        android:textColor="#ffe1e1e1" />
 
     <Button
         android:id="@+id/SaveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="btnSave"
-        android:text="Save"
+        android:text="@string/save"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true" />
@@ -91,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Username"
+        android:text="@string/username"
         android:id="@+id/tx_username"
         android:layout_below="@+id/reg_email"
         android:layout_alignParentStart="true" />
@@ -102,13 +106,14 @@
         android:id="@+id/reg_username"
         android:layout_below="@+id/tx_username"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/reg_email" />
+        android:layout_alignEnd="@+id/reg_email"
+        android:textColor="#ffe1e1e1" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Password"
+        android:text="@string/password"
         android:id="@+id/textView4"
         android:layout_below="@+id/reg_username"
         android:layout_alignParentStart="true" />
@@ -119,6 +124,7 @@
         android:id="@+id/reg_password"
         android:layout_below="@+id/textView4"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/reg_username" />
+        android:layout_alignEnd="@+id/reg_username"
+        android:textColor="#ffe1e1e1" />
 
 </RelativeLayout>

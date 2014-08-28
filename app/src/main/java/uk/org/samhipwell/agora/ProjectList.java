@@ -20,30 +20,21 @@ import java.util.ArrayList;
 
 
 public class ProjectList extends ListActivity  {
+    /**
+     * This is the activity which shows all the current user's projects.
+     * By means of list inflation
+     */
 
     private static ArrayList<ProjectsData>projectList = new ArrayList<ProjectsData>();
     private static ArrayAdapter<ProjectsData> projectAdaptor;
-    //private RepoList_Service.repoListBinder repolist = null;
 
-/*
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            repolist = (RepoList_Service.repoListBinder) service;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            repolist = null;
-        }
-    };
-*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projectlist);
         Log.d("Agora","Project List create");
-        //this.bindService(new Intent(this,RepoList_Service.class),serviceConnection,Context.BIND_AUTO_CREATE);
+
     }
 
 
@@ -221,8 +212,6 @@ public class ProjectList extends ListActivity  {
 
                         intent.putExtras(bundle);
                         startActivity(intent);
-
-
                     }
                 }
             });

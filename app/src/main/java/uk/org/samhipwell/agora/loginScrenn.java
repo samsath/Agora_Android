@@ -25,10 +25,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -36,9 +34,15 @@ import java.util.concurrent.ExecutionException;
 
 public class loginScrenn extends Activity {
 
+    /**
+     * This is the main activity to sign a user onto the app.
+     */
+
     static SharedPreferences settings;
     private static String url = "";
     private static String port = "";
+
+    fileSurport fs;
 
 
     HttpClient httpclient = new DefaultHttpClient();
@@ -49,19 +53,20 @@ public class loginScrenn extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        fs = new fileSurport(this);
+
         setContentView(R.layout.activity_loginscreen);
 
         Log.e("Agora","LoginScreen Started");
 
+        // get the system preferences for the url and port of the server
         settings = this.getSharedPreferences("Agora", MODE_WORLD_READABLE);
-       // if(settings.contains("agoraURL")){
-            url = settings.getString("agoraURL"," ");
-            Log.d("Agora","url =" +url);
-        //}
-       // if(settings.contains("agoraPort")){
-            port = settings.getString("agoraPort"," ");
-            Log.d("Agora","port =" +port);
-       // }
+        url = settings.getString("agoraURL"," ");
+        port = settings.getString("agoraPort"," ");
+        Log.d("Agora","url =" +url);
+        Log.d("Agora","port =" +port);
+
         uname = (EditText) findViewById(R.id.etUsername);
         pwd = (EditText) findViewById(R.id.etPassword);
     }
@@ -96,6 +101,10 @@ public class loginScrenn extends Activity {
 
     public void signinClick(View view) throws ExecutionException, InterruptedException {
 
+        /**
+         * This sends the server the user information for it to check if they exsist.
+         */
+
         List<String> data = new ArrayList<String>();
         String username = uname.getText().toString();
         String password = pwd.getText().toString();
@@ -118,6 +127,11 @@ public class loginScrenn extends Activity {
 
         try {
             if(jsonResult.getString("logged").equals("Welcome")){
+
+                /*
+                    Adds user to the app
+                 */
+
                 Log.d("Agora UI",jsonResult.getString("first_name"));
 
                 User user = new User();
@@ -136,6 +150,10 @@ public class loginScrenn extends Activity {
 
 
             }else{
+                /*
+                    Resets the form and informs the user that, that this account doesn't exists.
+                 */
+
                 uname.setText("User name here please!");
                 pwd.setText("");
                 Context context = getApplicationContext();
@@ -151,6 +169,7 @@ public class loginScrenn extends Activity {
     }
 
     public void registerClick(View view) {
+        // Starts the activity for the user registration
         Intent intent = new Intent(loginScrenn.this,RegisterActivity.class);
         startActivity(intent);
     }
@@ -162,8 +181,7 @@ public class loginScrenn extends Activity {
 
         @Override
         protected JSONObject doInBackground(List<String>... request) {
-            //  http://www.androidsnippets.com/executing-a-http-post-request-with-httpclient
-            //  http://stackoverflow.com/questions/6343166/android-os-networkonmainthreadexception
+            // Async communication with the server to check if there is a user of this description if so send back their details.
 
 
             String result;
@@ -182,6 +200,8 @@ public class loginScrenn extends Activity {
             postValues.add(new BasicNameValuePair("password", password));
 
            try {
+               // HTTP post to the server to receive the data.
+
                Log.e("Agora", "post value -" + postValues.toString());
                httppost.setEntity(new UrlEncodedFormEntity(postValues, "UTF-8"));
                response = httpclient.execute(httppost);
@@ -190,15 +210,7 @@ public class loginScrenn extends Activity {
 
                InputStream inputstream = entity.getContent();
 
-               BufferedReader reader = new BufferedReader(new InputStreamReader(inputstream,"UTF-8"), 8);
-               StringBuilder buidler = new StringBuilder();
-
-               String line;
-
-               while((line =  reader.readLine()) != null){
-                   buidler.append(line + "\n");
-               }
-               result = buidler.toString();
+               result = fs.readEntry(inputstream);
 
                Log.e("Agora Result",result);
 

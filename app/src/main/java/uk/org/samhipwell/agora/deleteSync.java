@@ -25,7 +25,6 @@ import java.util.List;
  */
 public class deleteSync extends AsyncTask<String,Integer,String> {
 
-    private Context context;
     private HttpClient httpclient = new DefaultHttpClient();
     private Database db;
     protected String port;
@@ -41,7 +40,7 @@ public class deleteSync extends AsyncTask<String,Integer,String> {
     private String projectName;
 
     public deleteSync(Context contexts,String filepath){
-        context = contexts;
+        Context context = contexts;
         oldfile = filepath;
 
         db = new Database(context);

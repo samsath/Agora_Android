@@ -7,6 +7,9 @@ import android.content.Intent;
 
 public class BootReceiver extends BroadcastReceiver {
 
+    /**
+     * Set up the alarm on boot
+     */
     AlarmReciever alarm = new AlarmReciever();
 
     @Override

@@ -24,6 +24,10 @@ import java.util.List;
 
 
 public class shareSync extends AsyncTask<String,Integer,JSONObject> {
+    /**
+     * This is the shareSync async task which works with the share activity. This is sent a list of
+     * emails to relay to the server.
+     */
     private Context context;
     private HttpClient httpclient = new DefaultHttpClient();
     public String SendBack;
@@ -37,13 +41,15 @@ public class shareSync extends AsyncTask<String,Integer,JSONObject> {
     String cookie;
 
     private Database db;
-    JsonGet js;
     fileSurport fs;
     Repo repo;
 
     JSONObject sendcontent = new JSONObject();
 
     public shareSync(Context contect, String filepat, ArrayList<String> emails){
+        /*
+            produces the contact list into a json.
+         */
         context = contect;
         emailsList = emails;
 
@@ -80,7 +86,6 @@ public class shareSync extends AsyncTask<String,Integer,JSONObject> {
         aurl ="http://"+ url +":"+ port +"/app/";
 
         fs = new fileSurport(context);
-        js = new JsonGet();
         db = new Database(context);
         repo = db.getRepo(project);
 
@@ -88,6 +93,9 @@ public class shareSync extends AsyncTask<String,Integer,JSONObject> {
 
     @Override
     protected JSONObject doInBackground(String... strings) {
+        /*
+            Sends the emails to the server in the form of a json.
+         */
         List<Login> det = db.getLogin();
         cookie = det.get(0).getCookie();
         long user_id = det.get(0).getUserid();
