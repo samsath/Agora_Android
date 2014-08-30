@@ -31,7 +31,7 @@
             android:id="@+id/im_orange"
             android:background="@drawable/orange"
             android:onClick="imageClick"
-            android:tag="#ffff6600"
+            android:tag="#ff6600"
             android:padding="5dp"
             android:contentDescription="@string/orange" />
 
@@ -41,7 +41,7 @@
             android:id="@+id/im_darkgrey"
             android:background="@drawable/darkgrey"
             android:onClick="imageClick"
-            android:tag="#ff2d2d2d"
+            android:tag="#2d2d2d"
             android:padding="5dp"
             android:contentDescription="@string/dgrey"/>
 
@@ -51,7 +51,7 @@
             android:id="@+id/im_blue"
             android:background="@drawable/blue"
             android:onClick="imageClick"
-            android:tag="#ff104ba9"
+            android:tag="#104ba9"
             android:padding="5dp"
             android:contentDescription="@string/blue"/>
 
@@ -61,7 +61,7 @@
             android:id="@+id/im_green"
             android:background="@drawable/green"
             android:onClick="imageClick"
-            android:tag="#ff1db312"
+            android:tag="#1db312"
             android:padding="5dp"
             android:contentDescription="@string/green"/>
 
@@ -71,7 +71,7 @@
             android:id="@+id/im_lgrey"
             android:background="@drawable/lgrey"
             android:onClick="imageClick"
-            android:tag="#fee0e0e0"
+            android:tag="#e0e0e0"
             android:padding="5dp"
             android:contentDescription="@string/lgrey"/>
 
@@ -81,7 +81,7 @@
             android:id="@+id/im_red"
             android:background="@drawable/red"
             android:onClick="imageClick"
-            android:tag="#ffff270d"
+            android:tag="#ff270d"
             android:padding="5dp"
             android:contentDescription="@string/red"/>
 
@@ -92,7 +92,7 @@
             android:background="@drawable/lblue"
             android:onClick="imageClick"
             android:padding="5dp"
-            android:tag="#ff51dee0"
+            android:tag="#51dee0"
             android:contentDescription="@string/blue"/>
 
         <ImageButton
@@ -101,7 +101,7 @@
             android:id="@+id/im_mustard"
             android:background="@drawable/musturd"
             android:onClick="imageClick"
-            android:tag="#ffffcb25"
+            android:tag="#ffcb25"
             android:padding="5dp"
             android:contentDescription="@string/mustard"/>
 
@@ -111,7 +111,7 @@
             android:id="@+id/im_brown"
             android:background="@drawable/brown"
             android:onClick="imageClick"
-            android:tag="#ff834c24"
+            android:tag="#834c24"
             android:padding="5dp"
             android:contentDescription="@string/brown"/>
 
@@ -121,7 +121,7 @@
             android:id="@+id/im_lime"
             android:background="@drawable/lime"
             android:onClick="imageClick"
-            android:tag="#ff00ff00"
+            android:tag="#00ff00"
             android:padding="5dp"
             android:contentDescription="@string/lime"/>
 

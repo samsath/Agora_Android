@@ -49,6 +49,10 @@ public class fileSurport {
         if(isExternalStorageWritableReader()){
 
             String uri = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+ projectname.replaceAll(" ", "_")+"/"+filename;
+            if (!uri.endsWith(".note")) {
+                uri = uri+".note";
+            }
+            Log.e("AGORA ++++ READFILE","ur = "+uri);
             File file = new File(uri);
 
             String output = readEntry(new FileInputStream(file));
@@ -60,7 +64,10 @@ public class fileSurport {
 
     public String readFile(String uri) throws IOException {
         if(isExternalStorageWritableReader()) {
-
+            Log.e("AGORA ++++ READFILE","ur = "+uri);
+            if (!uri.endsWith(".note")) {
+                uri = uri+".note";
+            }
             File file = new File(uri);
 
             String output = readEntry(new FileInputStream(file));
@@ -89,7 +96,7 @@ public class fileSurport {
          */
 
         String uri = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+ projectname.replaceAll(" ", "_")+"/"+filename;
-        //Log.d("Agora file uri",uri);
+        Log.d("Agora file uri",uri);
         writeEntiry(uri,content);
 
     }
@@ -101,6 +108,9 @@ public class fileSurport {
     public void writeEntiry(String url, String content){
         if(isExternalStorageWritableReader()){
             try{
+                if (!url.endsWith(".note")) {
+                    url = url+".note";
+                }
                 File file = new File(url);
 
                 FileWriter output = new FileWriter(file);
@@ -121,29 +131,40 @@ public class fileSurport {
          */
         Map<String,Integer> results = new HashMap<String,Integer>();
         if(isExternalStorageWritableReader()){
-            //Log.d("Agora Compare",serverList.toString());
-            String ur = Environment.DIRECTORY_DOCUMENTS +"/"+projectName;
-            // Log.d("Agroa compare dir",ur);
+
+            String ur = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/"+projectName;
+            Log.d("Agroa compare dir",ur);
             File file = new File(ur);
             File[] listofFiles = file.listFiles();
+
             if(listofFiles != null) {
+                Log.d("Agora Compare ", "========================================++");
+                Log.d("Agora Compare", serverList.toString());
+                Log.d("Agora Compare", "" + listofFiles.length);
                 for (File f : listofFiles) {
-                    if (serverList.containsKey(f.toString())) {
-                        if (serverList.get(f.toString()) != f.lastModified()) {
+                    if (serverList.containsKey(f.getName())) {
+                        Log.e("Agora FS", "Serverlist contatins");
+                        if (serverList.get(f.getName()) != f.lastModified()) {
                             // If file exsists but different modified times.
-                            results.put(f.toString(), UPDATE);
+                            Log.e("AGORA FS C", "+++++++ UPDATE " + f.getName());
+                            results.put(f.getName(), UPDATE);
                         }
-                    }else{
+                    } else {
                         // No file on device so get from server
-                        results.put(f.toString(),SEND);
+                        Log.e("AGORA FS C", "+++++++ SEND " + f.getName());
+                        results.put(f.getName(), SEND);
                     }
                 }
-            }else{
-                // Project Dir is empty
-                for(String key : serverList.keySet()){
-                    results.put(key,GET);
+                for (File f : listofFiles) {
+
+                    serverList.remove(f.getName());
                 }
             }
+            for(String key : serverList.keySet()){
+                Log.e("AGORA FS C","+=+=+=+=+=+ GET "+key);
+                results.put(key,GET);
+            }
+
 
         }
         //Log.e("Agora List result",results.toString());

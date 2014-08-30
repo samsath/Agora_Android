@@ -41,8 +41,8 @@ public class NoteActivity extends Activity {
 
     public String FilePath;
     EditText content;
-    String textColour;
-    String bgColour;
+    String textColour = "#2d2d2d";
+    String bgColour = "#e1e1e1";
     public int datetime;
     public String uname;
     public String type;
@@ -51,6 +51,7 @@ public class NoteActivity extends Activity {
 
     fileSurport fs;
     Database db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +159,7 @@ public class NoteActivity extends Activity {
                 sbundle.putString("path",FilePath);
                 sintent.putExtras(sbundle);
                 startActivity(sintent);
+                return true;
             case R.id.TextColour:
                 // set the text colour
                 colourClick(D_TEXT);
@@ -262,14 +264,6 @@ public class NoteActivity extends Activity {
          */
         String outputString = "";
         try {
-            // sets default background colours if the user didn't specify any.
-            if(bgColour.equals("")){
-                bgColour = "#e1e1e1";
-            }
-            if(textColour.equals("")){
-                textColour = "#2d2d2d";
-            }
-
             /*
                 This is to arrange the file info into the json format
              */

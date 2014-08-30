@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,9 +110,9 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                     }
                 }else{
                     JSONObject row = array.getJSONObject(i);
-
+                    projectName = row.getString("name");
                     if(db.getRepo(row.getString("name"))==null) {
-                        projectName = row.getString("name");
+
                         hashname = row.getString("url");
                         Repo rep = new Repo();
                         rep.setRname(projectName);
@@ -136,7 +138,8 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                         JSONObject reprow = RepArray.getJSONObject(r);
                         serverList.put(reprow.getString("name"),Long.valueOf(reprow.getString("time")));
                     }
-                    //Log.e("Agora Server Reply List",serverList.toString());
+                    Log.e("Agora Server Reply List", serverList.toString());
+
                     Map<String,Integer> getList = fs.compareList(serverList, projectName);
 
                     /*
@@ -144,10 +147,18 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                      */
 
                     for(Map.Entry<String,Integer> item : getList.entrySet()){
-                        String note = item.getKey().substring(0, item.getKey().length() - 5).toLowerCase();
+                        String note = "";
+                        if (item.getKey().endsWith(".note")) {
+                            note = item.getKey().substring(0, item.getKey().length() - 5).toLowerCase();
+                        }else{
+                            note = item.getKey();
+                        }
+                        Log.e("======== AGORA ALL","note ="+note);
                         switch (item.getValue()){
                             case GET:
                                 // if the file request is just to recieve the file then a GET request is sent
+                                Log.e("======== AGORA GET","item.geyKey ="+item.getKey().toLowerCase());
+                                Log.e("======== AGORA GET","note ="+note);
                                 HttpGet htpget = new HttpGet(aurl+"repo/"+row.getString("url")+"/note/"+note+"/");
                                 ResponseHandler<String> responseHandler = new BasicResponseHandler();
                                 String serverRes;
@@ -160,29 +171,39 @@ public class serverSync extends AsyncTask<String, Integer, JSONObject> {
                             case SEND:
                                 // if the file is on the device but not on the server
                                 String sendcontent = fs.readFile(row.getString("name"), item.getKey().toLowerCase());
-                                HttpPost sendfile = new HttpPost(aurl+"repo/"+row.getString("url")+"/note/upload/"+note+"/");
+                                //String sendcontent = fs.readFile(item.getKey().toLowerCase());
+                                Log.e("======== AGORA SEND","item.geyKey ="+item.getKey().toLowerCase());
+                                Log.e("======== AGORA SEND","note ="+note);
+                                HttpPost sendfile = new HttpPost(aurl+"repo/note/upload/"+row.getString("url")+"/"+note+"/");
                                 List<NameValuePair> sendvalues = new ArrayList<NameValuePair>(2);
-                                sendvalues.add(new BasicNameValuePair("file",sendcontent));
+                                Log.e("Agora SendContent ====",sendcontent);
+                                sendvalues.add(new BasicNameValuePair("file", sendcontent));
                                 sendvalues.add(new BasicNameValuePair("session_key",cookie));
 
                                 sendfile.setEntity(new UrlEncodedFormEntity(sendvalues, "UTF-8"));
                                 httpclient.execute(sendfile);
-
 
                                 break;
 
                             case UPDATE:
                                 // the file is on the device and server but needs to be commbined
                                 String updatecontent = fs.readFile(row.getString("name"), item.getKey().toLowerCase());
-                                HttpPost updatefile = new HttpPost(aurl+"repo/"+row.getString("url")+"/note/check/"+note+"/");
+                                Log.e("======== AGORA UPDATE","item.geyKey ="+item.getKey().toLowerCase());
+                                Log.e("======== AGORA UPDATE","note ="+note);
+                                HttpPost updatefile = new HttpPost(aurl+"repo/note/check/"+row.getString("url")+"/"+note+"/");
                                 List<NameValuePair> updatevalues = new ArrayList<NameValuePair>(2);
+                                Log.e("Agora updatecontent ====",updatecontent);
                                 updatevalues.add(new BasicNameValuePair("file",updatecontent));
                                 updatevalues.add(new BasicNameValuePair("session_key",cookie));
 
                                 updatefile.setEntity(new UrlEncodedFormEntity(updatevalues, "UTF-8"));
                                 HttpResponse updateResponse = httpclient.execute(updatefile);
+                                HttpEntity upentity = updateResponse.getEntity();
 
-                                fs.writeFile(row.getString("name"), note, updateResponse.toString());
+                                InputStream inputstream = upentity.getContent();
+                                String upresult = fs.readEntry(inputstream);
+                                Log.i("Agora UPDATE REPLY ====",upresult);
+                                fs.writeFile(row.getString("name"), note, upresult);
 
                                 break;
 

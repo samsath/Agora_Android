@@ -17,7 +17,7 @@
         android:layout_marginTop="148dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:text="@string/projectnamehere"
+        android:hint="@string/projectnamehere"
         android:textColor="#ffe1e1e1" />
 
     <Button
