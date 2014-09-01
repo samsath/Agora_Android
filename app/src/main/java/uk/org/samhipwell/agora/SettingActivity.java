@@ -54,7 +54,7 @@ public class SettingActivity extends Activity {
 
         editor.apply();
 
-        Intent intent = new Intent(SettingActivity.this, MainActivity.class);
+        Intent intent = new Intent(SettingActivity.this, StarScreen.class);
         startActivity(intent);
     }
 }
