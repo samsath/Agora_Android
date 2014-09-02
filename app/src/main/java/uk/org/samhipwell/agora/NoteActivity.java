@@ -48,7 +48,7 @@ public class NoteActivity extends Activity {
     public String type;
     public String ocontent;
     public HashMap<Integer,List<String>> Comments = new HashMap<Integer, List<String>>();
-
+    public HashMap<Integer,List<String>> ArchiveList = new HashMap<Integer, List<String>>();
     fileSurport fs;
     Database db;
 
@@ -103,7 +103,7 @@ public class NoteActivity extends Activity {
                     for(int j = 0; j < commentArray.length(); j++){
 
                         String user = commentArray.getJSONObject(j).getString("user");
-                        String datetime = String.valueOf((commentArray.getJSONObject(j).getInt("datetime")));
+                        String datetime = String.valueOf(commentArray.getJSONObject(j).getInt("datetime"));
                         String body = commentArray.getJSONObject(j).getString("body");
 
                         List<String> comment = new ArrayList<String>();
@@ -114,6 +114,27 @@ public class NoteActivity extends Activity {
                         Comments.put(j,comment);
                     }
                 }
+
+                try{
+                    JSONObject archiveObject = mainObj.getJSONObject("comment");
+                } catch (JSONException e) {
+                    JSONArray archiveArray = mainObj.getJSONArray("comment");
+                    for(int a =0;a<archiveArray.length();a++){
+                        String user = archiveArray.getJSONObject(a).getString("user");
+                        String datetime = String.valueOf(archiveArray.getJSONObject(a).getInt("datetime"));
+                        String body = archiveArray.getJSONObject(a).getString("body");
+
+                        List<String> arch = new ArrayList<String>();
+                        arch.add(user);
+                        arch.add(datetime);
+                        arch.add(body);
+
+                        ArchiveList.put(a,arch);
+                    }
+
+
+                }
+
                 datetime = noteObject.getInt("datetime");
                 uname = noteObject.getString("user");
                 ocontent = noteObject.getString("content");
@@ -270,6 +291,7 @@ public class NoteActivity extends Activity {
 
             // Josn main
             JSONObject json = new JSONObject();
+
             //Note
             JSONObject noteJson = new JSONObject();
             noteJson.put("user", db.getUsername());
@@ -279,6 +301,7 @@ public class NoteActivity extends Activity {
             noteJson.put("type","html");
             noteJson.put("content",content.getText());
             json.put("note",noteJson);
+
             // Comment
             JSONArray commentJson = new JSONArray();
             for(int i =0 ; i < Comments.size();i++){
@@ -289,6 +312,26 @@ public class NoteActivity extends Activity {
                 commentJson.put(comment);
             }
             json.put("comment",commentJson);
+
+            //Archive
+            JSONArray archiveJson = new JSONArray();
+
+            JSONObject archJson = new JSONObject();
+            archJson.put("user", db.getUsername());
+            archJson.put("datetime",System.currentTimeMillis());
+            archJson.put("body",content.getText());
+            archiveJson.put(archJson);
+
+            for(int a =0; a<ArchiveList.size();a++){
+                JSONObject arch = new JSONObject();
+                arch.put("user",ArchiveList.get(a).get(0));
+                arch.put("datatime",ArchiveList.get(a).get(1));
+                arch.put("body",ArchiveList.get(a).get(2));
+                archiveJson.put(arch);
+            }
+            json.put("archive",archiveJson);
+
+            //Putting them all together
             outputString = json.toString();
 
         } catch (JSONException e) {
