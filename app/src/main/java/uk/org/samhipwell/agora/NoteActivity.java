@@ -339,7 +339,6 @@ public class NoteActivity extends Activity {
             Log.e("Agora", "Could not create JSON object Crash");
             finish();
         }
-
         /*
             Sort out if the file is a new one so loads it or creates a new one.
          */
@@ -355,7 +354,6 @@ public class NoteActivity extends Activity {
         /*
             writes the string to the system
          */
-
         Log.e("Agora","The Note String === " + outputString);
         fs.writeFile(url,outputString);
         finish();
