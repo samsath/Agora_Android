@@ -19,6 +19,7 @@ import android.view.View;
 public class NoteView extends View {
     /**
      * This here is a custom view to be inserted into the grid layout so that the user can interact with it.
+     * This is guided by the google development website.
      */
 
     // Text colour

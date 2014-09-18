@@ -24,6 +24,9 @@ import java.util.List;
  * Created by sam on 23/08/14.
  */
 public class deleteSync extends AsyncTask<String,Integer,String> {
+    /**
+     * This will delete a note from the phone and from the server.
+     */
 
     private HttpClient httpclient = new DefaultHttpClient();
     private Database db;
@@ -40,6 +43,9 @@ public class deleteSync extends AsyncTask<String,Integer,String> {
     private String projectName;
 
     public deleteSync(Context contexts,String filepath){
+        /*
+        This will work out what file the user wants to be deleted and then sets up the Async
+         */
         Context context = contexts;
         oldfile = filepath;
 
@@ -69,6 +75,11 @@ public class deleteSync extends AsyncTask<String,Integer,String> {
 
     @Override
     protected String doInBackground(String... strings) {
+        /*
+        This sends the request to the server to delete the file. By means of deletion it only changes
+        the postfix from .note to .delete so that the file wont be recognised when it is uploaded but
+        not fully lost.
+         */
         String res ="";
         File old = new File(oldfile);
         old.renameTo(new File(oldfile+".delete"));

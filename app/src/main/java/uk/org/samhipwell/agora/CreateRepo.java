@@ -88,7 +88,9 @@ public class CreateRepo extends Activity {
 
         @Override
         protected String doInBackground(String... lists) {
-
+            /**
+             * This communicates with the server and sends the request to create the project.
+             */
 
             SharedPreferences settings = getApplicationContext().getSharedPreferences("Agora", MODE_WORLD_READABLE);
             String url = settings.getString("agoraURL"," ");

@@ -12,7 +12,8 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 public class AlarmReciever extends WakefulBroadcastReceiver {
 
     /**
-     * This is to set up the sync to the server so it happens every 30min or so.
+     * This is to set up the sync to the server so it happens every 30min or so. Comes partly from the
+     * Google Development website.
      */
 
     private AlarmManager alarmMan;
@@ -49,6 +50,9 @@ public class AlarmReciever extends WakefulBroadcastReceiver {
     }
 
     public void cancelAlarm(Context context){
+        /**
+         * This is to cancel the alarm
+         */
         if(alarmMan!=null){
             alarmMan.cancel(alarmIntent);
         }
