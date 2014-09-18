@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,54 +78,90 @@ public class ShareActivity extends ListActivity {
         /*
             Reads the contact list saved on the phone and produces the contact details (name and email)
             which is then used to create a list for the user to click on.
-         */
-        ContentResolver cr = getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null);
-        if(cur.getCount()>0){
-            while(cur.moveToFirst()){
-                String name ="";
-                String email="";
-                String photourl="";
-                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+        */
+        //ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        ContentResolver contres = getContentResolver();
+        Cursor cur = contres.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,null,null,null);
 
-                Cursor imq = cr.query(Uri.parse(ContactsContract.CommonDataKinds.Photo.PHOTO_THUMBNAIL_URI), null,
-                        ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", new String[]{id}, null);
+        String[] projection = new String[] {ContactsContract.CommonDataKinds.Phone.CONTACT_ID,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI,ContactsContract.CommonDataKinds.Email.DATA};
+        Cursor cnames = contres.query(uri,projection,null,null,null);
 
-                while(imq.moveToFirst()){
-                    photourl = imq.getString(imq.getColumnIndex(ContactsContract.CommonDataKinds.Photo.PHOTO_THUMBNAIL_URI));
+        int idIDX = cnames.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID);
+        int nameIDX = cnames.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+        int photoIDX = cnames.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI);
+
+        if(cnames.moveToFirst()) {
+            do {
+                String photoURL;
+                if (cnames.getString(photoIDX) != null) {
+                    photoURL = cnames.getString(photoIDX);
+                } else {
+                    photoURL = "@drawable/contact.png";
                 }
-
-                Cursor eq = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,null,
-                        ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",new String[]{id}, null);
-
-                while(eq.moveToNext()) {
-                    name = eq.getString(eq.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                    email = eq.getString(eq.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-
-                }
-                contactList.add(new Contact(name,email,photourl));
-            }
+                contactList.add(new Contact(cnames.getString(idIDX), cnames.getString(nameIDX), photoURL));
+            } while (cnames.moveToNext());
+        }else{
+            Log.d("AgoraContat","No Contacts");
         }
+        cnames.close();
+
+        while(cur.moveToNext()){
+            String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+            Cursor email = contres.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                    ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",new String[]{id}, null);
+
+            int emailidIDX = email.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID);
+            int emailAdresIDX = email.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+
+            if(email.moveToFirst()) {
+                do {
+                    String emailID = email.getString(emailidIDX);
+                    String emailAdd = email.getString(emailAdresIDX);
+                    for (int i = 0; i > contactList.size(); i++) {
+                        if (contactList.get(i).id.equals(emailID)) {
+                            contactList.get(i).setEmail(emailAdd);
+                        }
+                    }
+                } while (email.moveToNext());
+            }else{
+                Log.d("AgoraContat","No Email");
+            }
+
+            email.close();
+        }
+
         initContactInflate();
 
     }
 
     private void initContactInflate() {
+        Log.d("AgoraContact","Inflate");
+        for(int i=0 ; i > contactList.size(); i++){
+            Log.d("AgoreContacts", contactList.get(i).name);
+        }
         contactAdapter = new ContactFunctio(this,R.layout.comment_inflate,contactList);
         setListAdapter(contactAdapter);
     }
 
 
     class Contact{
+        public String id;
         public String name;
         public String email;
         public String thumb;
 
-        public Contact(String names,String emails,String photo){
+        public Contact(String id, String names,String photo){
+            this.id = id;
             this.name = names;
-            this.email = emails;
             this.thumb = photo;
         }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
     }
 
     private class ContactFunctio extends ArrayAdapter<Contact> {
